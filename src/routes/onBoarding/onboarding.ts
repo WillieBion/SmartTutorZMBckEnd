@@ -7,6 +7,7 @@ import {
   errorMessages,
   successCodes,
   successMessages,
+  errorCodes,
 } from "../../appResources/resources";
 import { database } from "../../instances/dbConfig";
 import bcrypt from "bcrypt";
@@ -36,7 +37,7 @@ bcrypt.hash(password, Number(properties.ENC_KEY)).then((hash) => {
       if (error) {
         console.log("Error: " + error, "statusCode:" + error.code);
         const dbResp = {
-          statusCode: error!.errno,
+          statusCode: errorCodes.INTERNAL_SERVER_ERROR,
           message: errorMessages.INTERNAL_SERVER_ERROR,
         };
         const resp = responseHandler(dbResp);

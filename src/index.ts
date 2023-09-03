@@ -29,9 +29,11 @@ sequelize
 
 //Routes
 const onbaording = require("./routes/onBoarding/onboarding");
+const login = require("./routes/Auth/login")
 
 //use routes
 app.use("/", onbaording);
+app.use("/", login)
 // console.log("onbaording: " + db.user_details);
 sequelize.sync().then(() => {
   app.listen(PORT, () => {
