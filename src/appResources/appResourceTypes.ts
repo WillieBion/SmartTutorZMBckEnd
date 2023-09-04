@@ -3,3 +3,4 @@ export interface ResponseHandler<T = unknown> {
     message: T;
     jwtToken?: string;
 }
+

@@ -7,6 +7,7 @@ import {
   successMessages,
   errorCodes,
 } from "../../appResources/resources";
+import { generateToken } from "../../appResources/jwtToken";
 import { LoginI } from "../../appResources/types/userDetailTypes";
 import { database } from "../../instances/dbConfig";
 import { db_query } from "../../instances/dbQuery";
@@ -31,35 +32,43 @@ router.post("/login", (req, res) => {
     if (result.length !== 0) {
       /*Compare bycrypt */
       bcrypt.compare(pin, result[0].password, (error, response) => {
-        if (response){
-            const {password, ...user} = result[0];
+        if (response) {
+          const { password, ...user } = result[0];
+          const { user_role, user_status ,...tokenGenerator} = result[0]
 
-            //repetiton ====>>> needs refactoring
-            const respo = {
-                statusCode: successCodes.SERVER_SUCCESS,
-                message: {description: successMessages.LOGIN_SUCCESS, user_details: user}, 
-            }
-            const resp = responseHandler(respo)
-            res.status(resp.statusCode).json(resp);
-        }else{
-            const respo = {
-                statusCode: errorCodes.BAD_REQUEST,
-                message: errorMessages.USER_CREDENTIALS_WRONG
-            }
-            const resp = responseHandler(respo);
+          const userAccToken = generateToken(tokenGenerator);
 
-            res.status(resp.statusCode).json(resp);
+          //repetiton ====>>> needs refactoring
+          const respo = {
+            statusCode: successCodes.SERVER_SUCCESS,
+            message: {
+              description: successMessages.LOGIN_SUCCESS,
+              user_details: user,
+            },
+            jwtToken: userAccToken
+          };
+          const resp = responseHandler(respo);
+          res.status(resp.statusCode).json(resp);
+        } else {
+          const respo = {
+            statusCode: errorCodes.BAD_REQUEST,
+            message: errorMessages.USER_CREDENTIALS_WRONG,
+          };
+          const resp = responseHandler(respo);
 
+          res.status(resp.statusCode).json(resp);
         }
       });
-    }else{
-        const respo = {
-            statusCode: errorCodes.NOT_FOUND_RESOURCE,
-            message: errorMessages.USER_NOT_FOUND
-        }
-        const resp = responseHandler(respo);
+    } else {
+      //repetiton ====>>> needs refactoring
 
-        res.status(resp.statusCode).json(resp);
+      const respo = {
+        statusCode: errorCodes.NOT_FOUND_RESOURCE,
+        message: errorMessages.USER_NOT_FOUND,
+      };
+      const resp = responseHandler(respo);
+
+      res.status(resp.statusCode).json(resp);
     }
   });
 });
