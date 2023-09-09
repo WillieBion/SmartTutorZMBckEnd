@@ -27,13 +27,17 @@ sequelize
     console.error("Unable to connect to the database: ", error);
   });
 
-//Routes
+//Routes Auth
 const onbaording = require("./routes/onBoarding/onboarding");
 const login = require("./routes/Auth/login")
+
+// Routes Subjects
+const contentManagement =  require("./routes/contentManagement/subjects")
 
 //use routes
 app.use("/", onbaording);
 app.use("/", login)
+app.use("/contentManagement", contentManagement)
 // console.log("onbaording: " + db.user_details);
 sequelize.sync().then(() => {
   app.listen(PORT, () => {

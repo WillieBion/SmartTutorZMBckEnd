@@ -8,7 +8,7 @@ export const database = mysql.createConnection({
   password: properties.DB_PASS,
   database: properties.DB,
 });
-// console.log(properties);
+console.log(properties);
 database.connect((err, conn) => {
     if (err){
         console.log("Database connection error" + err);

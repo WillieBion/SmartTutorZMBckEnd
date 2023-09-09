@@ -48,6 +48,7 @@ export const successMessages = {
   WELCOME_ABOARD:
     "You have been successfully onboarded. Welcome to Smart Tutor",
   LOGIN_SUCCESS: "Login successful, Welcome to Smart Tutor",
+  ADD_SUBJECT_SUCCESS: "You have successfully added a subject"
 };
 
 // module.exports = {
