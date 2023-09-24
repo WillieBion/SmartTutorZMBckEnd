@@ -4,7 +4,14 @@ export interface IContentManagemnt {
 }
 
 export interface IExam {
-  name: string;
+  title: string;
   description: string;
   subject: number;
+  year: string;
+}
+
+export interface IExamContent {
+  exam: number;
+  exam_type: string;
+  exam_link: string;
 }
