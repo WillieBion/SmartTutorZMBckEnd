@@ -53,6 +53,23 @@ export const successMessages = {
   ADD_EXAM_CONTENT_SUCCESS: "You have successfully added",
 };
 
+// Base URL
+export const BASE_URL = "https://api.primenetpay.com:9001";
+
+export const generateTransId = () => {
+  const prefix = "0000";
+  const randomer = Math.floor(Math.random() * 100000000)
+    .toString()
+    .padStart(8, "0");
+
+  return prefix + randomer;
+};
+
+//Payment Messages
+export const paymentMessages = {
+  NARRATION_MSG: "eTutor subscription payment",
+};
+
 // module.exports = {
 //     app,
 //     router

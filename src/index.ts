@@ -6,8 +6,6 @@ const app = express();
 // const Sequelize = require("sequelize");
 import { Sequelize } from "sequelize";
 
-
-
 //
 app.use(express.json());
 
@@ -29,21 +27,37 @@ sequelize
 
 //Routes Auth
 const onbaording = require("./routes/onBoarding/onboarding");
-const login = require("./routes/Auth/login")
+const login = require("./routes/Auth/login");
 
 // Routes Subjects
-const contentManagement =  require("./routes/contentManagement/subjects")
-const examManagement = require("./routes/contentManagement/exams")
+const contentManagement = require("./routes/contentManagement/subjects");
+const examManagement = require("./routes/contentManagement/exams");
 
+//Payment
+const paymentManagement = require("./routes/payment/collection");
+
+// const generateTransId = () => {
+//   const prefix = "0000";
+//   const randomer = Math.floor(Math.random() * 100000000)
+//     .toString()
+//     .padStart(8, "0");
+
+//   return prefix + randomer;
+// };
+// console.log(generateTransId());
 //use routes
 app.use("/", onbaording);
-app.use("/", login)
-app.use("/contentManagement", contentManagement, examManagement)
+app.use("/", login);
+app.use("/contentManagement", contentManagement, examManagement);
+app.use("/payment", paymentManagement);
 // console.log("onbaording: " + db.user_details);
-sequelize.sync().then(() => {
-  app.listen(PORT, () => {
-      console.log(`listening on: http://localhost:${PORT}`)
+sequelize
+  .sync()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`listening on: http://localhost:${PORT}`);
+    });
   })
-}).catch((err: any) => {
-  console.log("This could be the error ==>", err)
-})
+  .catch((err: any) => {
+    console.log("This could be the error ==>", err);
+  });

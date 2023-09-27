@@ -7,5 +7,6 @@ export const properties = {
   DB_PASS: process.env.DB_PASS,
   DB_HOST: process.env.DB_HOST,
   DB: process.env.DB,
-  ENC_KEY: process.env.SALT_ROUNDS
+  ENC_KEY: process.env.SALT_ROUNDS,
+  PAYMENT_API: process.env.PRIMENET_API_KEY
 };

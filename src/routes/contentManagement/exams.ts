@@ -140,4 +140,71 @@ router.post("/addExamContent", (req, res) => {
   }
 });
 
+router.get("/getExamContent/(:id)", (req, res) => {
+  //pass in exam ID to get the content
+  const { id } = req.params;
+  try {
+    database.query(
+      db_query.GET_EXAM_CONTENT_QRY,
+      id,
+      (err, result: IExam[]) => {
+        if (err) {
+          const dbResp = {
+            statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+            message: err.code,
+          };
+          const resp = responseHandler(dbResp);
+          res.status(resp.statusCode).json(resp);
+        } else {
+          const dbResp = {
+            statusCode: successCodes.SERVER_SUCCESS,
+            message: result[0],
+          };
+          const resp = responseHandler(dbResp);
+          res.status(resp.statusCode).json(resp);
+        }
+      }
+    );
+  } catch (error) {
+    const dbResp = {
+      statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+      message: errorMessages.INTERNAL_SERVER_ERROR,
+    };
+    const resp = responseHandler(dbResp);
+    res.status(resp.statusCode).json(resp);
+  }
+});
+
+router.get("/getAllExamContent", (req, res) => {
+  try {
+    database.query(
+      db_query.GET_ALL_EXAM_CONTENT_QRY,
+      (error, result: IExam[]) => {
+        if (error) {
+          const dbResp = {
+            statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+            message: error.code,
+          };
+          const resp = responseHandler(dbResp);
+          res.status(resp.statusCode).json(resp);
+        } else {
+          const dbResp = {
+            statusCode: successCodes.SERVER_SUCCESS,
+            message: result,
+          };
+          const resp = responseHandler(dbResp);
+          res.status(successCodes.SERVER_SUCCESS).json(resp);
+        }
+      }
+    );
+  } catch (error) {
+    const dbResp = {
+      statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+      message: errorMessages.INTERNAL_SERVER_ERROR,
+    };
+    const resp = responseHandler(dbResp);
+    res.status(resp.statusCode).json(resp);
+  }
+});
+
 module.exports = router;
