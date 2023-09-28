@@ -29,9 +29,13 @@ sequelize
 const onbaording = require("./routes/onBoarding/onboarding");
 const login = require("./routes/Auth/login");
 
-// Routes Subjects
+// Routes SubjectsManagement
 const contentManagement = require("./routes/contentManagement/subjects");
 const examManagement = require("./routes/contentManagement/exams");
+const lessonManagement = require("./routes/contentManagement/lessons");
+
+//Routes TopicsManagement
+const TopicsManagement = require("./routes/contentManagement/subjectTopic");
 
 //Payment
 const paymentManagement = require("./routes/payment/collection");
@@ -48,7 +52,13 @@ const paymentManagement = require("./routes/payment/collection");
 //use routes
 app.use("/", onbaording);
 app.use("/", login);
-app.use("/contentManagement", contentManagement, examManagement);
+app.use(
+  "/contentManagement",
+  contentManagement,
+  examManagement,
+  lessonManagement,
+  TopicsManagement
+);
 app.use("/payment", paymentManagement);
 // console.log("onbaording: " + db.user_details);
 sequelize

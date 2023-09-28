@@ -51,6 +51,8 @@ export const successMessages = {
   ADD_SUBJECT_SUCCESS: "You have successfully added a subject",
   ADD_EXAM_SUCCESS: "You have successfully added an exam",
   ADD_EXAM_CONTENT_SUCCESS: "You have successfully added",
+  ADD_LESSON_SUCCESS: "You have successfully added a lesson",
+  ADD_TOPIC_SUCCESS: "You have successfully added a topic",
 };
 
 // Base URL
@@ -67,7 +69,7 @@ export const generateTransId = () => {
 
 //Payment Messages
 export const paymentMessages = {
-  NARRATION_MSG: "eTutor subscription payment",
+  NARRATION_MSG: "SmartTutor Payment",
 };
 
 // module.exports = {

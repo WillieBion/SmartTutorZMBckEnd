@@ -207,4 +207,28 @@ router.get("/getAllExamContent", (req, res) => {
   }
 });
 
+/* Get exam by subject ID */
+router.get("/getExamBySubject/(:id)", (req, res) => {
+  const { id } = req.params;
+  try {
+    database.query(db_query.GET_EXAM_BY_SUBJECT_QRY, id, (err, result) => {
+      if (err) {
+        const dbResp = {
+          statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+          message: err.code,
+        };
+        const resp = responseHandler(dbResp);
+        res.status(resp.statusCode).json(resp);
+      } else {
+        const dbResp = {
+          statusCode: successCodes.SERVER_SUCCESS,
+          message: result,
+        };
+        const resp = responseHandler(dbResp);
+        res.status(successCodes.SERVER_SUCCESS).json(resp);
+      }
+    });
+  } catch (error) {}
+});
+
 module.exports = router;
