@@ -11,17 +11,18 @@ import { database } from "../../instances/dbConfig";
 import { db_query } from "../../instances/dbQuery";
 
 router.post("/AddLesson", (req, res) => {
-  const { title, description, topic, media_type, duration, link } = req.body;
+  // const { title, description, topic, media_type, duration, link } = req.body;
+  const { title, duration, media_type, media_value, subject_id } = req.body;
 
   try {
     database.query(
       db_query.ADD_LESSON_QRY,
-      [title, description, topic, media_type, duration, link],
+      [title, duration, media_type, media_value, subject_id],
       (error, result) => {
         if (error) {
           const dbResp = {
             statusCode: errorCodes.INTERNAL_SERVER_ERROR,
-            message: errorMessages.INTERNAL_SERVER_ERROR,
+            message: error.code,
           };
           const resp = responseHandler(dbResp);
           res.status(resp.statusCode).json(resp);
@@ -46,13 +47,13 @@ router.post("/AddLesson", (req, res) => {
   }
 });
 
-router.get("/getLessonByTopic/(:id)", (req, res) => {
+router.get("/getLessonBySubject/(:id)", (req, res) => {
   const { id } = req.params;
-  database.query(db_query.GET_LESSON_BY_TOPIC, id, (err, result) => {
+  database.query(db_query.GET_LESSON_BY_SUBJECT, id, (err, result) => {
     if (err) {
       const dbResp = {
         statusCode: errorCodes.INTERNAL_SERVER_ERROR,
-        message: errorMessages.INTERNAL_SERVER_ERROR,
+        message: err.code,
       };
       const resp = responseHandler(dbResp);
       res.status(resp.statusCode).json(resp);
@@ -66,6 +67,5 @@ router.get("/getLessonByTopic/(:id)", (req, res) => {
     }
   });
 });
-
 
 module.exports = router;

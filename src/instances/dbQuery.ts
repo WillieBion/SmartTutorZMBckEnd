@@ -5,7 +5,7 @@ const GET_SUBJECT_QRY = "SELECT * FROM subject WHERE id = ?";
 const GET_ALL_SUBJECT_QRY = "SELECT * FROM subject";
 /*Exams */
 const ADD_EXAM_QRY =
-  "INSERT INTO exam (title, description, subject, year) VALUES (?, ?, ?, ?)";
+  "INSERT INTO exam (title, duration, media_type, media_value, year, subject) VALUES (?, ?, ?, ?, ?, ?)";
 const GET_EXAM_QRY = "SELECT * FROM exam WHERE id = ?";
 const GET_ALL_EXAM_QRY = "SELECT * FROM exam";
 const GET_EXAM_BY_SUBJECT_QRY = "SELECT * FROM exam WHERE subject = ?";
@@ -17,8 +17,8 @@ const GET_ALL_EXAM_CONTENT_QRY = "SELECT * FROM exam_content";
 
 /* Lessons && Content */
 const ADD_LESSON_QRY =
-  "INSERT INTO lesson (title, description, topic, media_type, duration, link) VALUES (?, ?, ?. ?, ?. ?)";
-const GET_LESSON_BY_TOPIC = "SELECT * FROM lesson WHERE topic = ?";
+  "INSERT INTO lessons (title, duration,media_type, media_value, subject_id) VALUES (?, ?, ?, ?, ?)";
+const GET_LESSON_BY_SUBJECT = "SELECT * FROM lessons WHERE subject_id = ?";
 
 /* Topic */
 
@@ -44,7 +44,7 @@ export const db_query = {
   GET_ALL_EXAM_CONTENT_QRY,
   GET_EXAM_BY_SUBJECT_QRY,
   ADD_LESSON_QRY,
-  GET_LESSON_BY_TOPIC,
+  GET_LESSON_BY_SUBJECT,
   ADD_TOPIC_QRY,
   GET_TOPIC_BY_SUBJECT,
 };
