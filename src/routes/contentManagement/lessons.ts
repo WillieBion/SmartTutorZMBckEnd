@@ -60,7 +60,7 @@ router.get("/getLessonBySubject/(:id)", (req, res) => {
     } else {
       const dbResp = {
         statusCode: successCodes.SERVER_SUCCESS,
-        message: result[0],
+        message: result,
       };
       const resp = responseHandler(dbResp);
       res.status(resp.statusCode).json(resp);
