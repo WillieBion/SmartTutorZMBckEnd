@@ -53,6 +53,7 @@ export const successMessages = {
   ADD_EXAM_CONTENT_SUCCESS: "You have successfully added",
   ADD_LESSON_SUCCESS: "You have successfully added a lesson",
   ADD_TOPIC_SUCCESS: "You have successfully added a topic",
+  ADD_PAYMENT_SUCCESS: "You have successfully added a payment",
 };
 
 // Base URL

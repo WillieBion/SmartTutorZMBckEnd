@@ -27,6 +27,14 @@ const ADD_TOPIC_QRY =
 
 const GET_TOPIC_BY_SUBJECT = "SELECT * FROM subject_topic WHERE subject = ?";
 
+/* Payment */
+
+const ADD_RECEIPT_QRY =
+  "INSERT INTO receipts (trans_id, amount, period, user_id) VALUES (?, ?, ?, ?)";
+
+/* Subscription */
+const ADD_SUBSCRIPTION_QRY =
+  "INSERT INTO subscriptions (user_id, trans_id, amount, period) VALUES (?, ?, ?, ?)";
 // const insertQuery = (tableName: string ) => {
 // String ADD_SUBJECT_QRY = `INSERT INTO ${tableName} ()
 // }
@@ -47,4 +55,6 @@ export const db_query = {
   GET_LESSON_BY_SUBJECT,
   ADD_TOPIC_QRY,
   GET_TOPIC_BY_SUBJECT,
+  ADD_RECEIPT_QRY,
+  ADD_SUBSCRIPTION_QRY,
 };

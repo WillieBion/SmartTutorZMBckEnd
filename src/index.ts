@@ -40,6 +40,9 @@ const TopicsManagement = require("./routes/contentManagement/subjectTopic");
 //Payment
 const paymentManagement = require("./routes/payment/collection");
 
+/* Subscription */
+const subscriptionManagement = require("./routes/subscription/subscription");
+
 // const generateTransId = () => {
 //   const prefix = "0000";
 //   const randomer = Math.floor(Math.random() * 100000000)
@@ -59,7 +62,7 @@ app.use(
   lessonManagement,
   TopicsManagement
 );
-app.use("/payment", paymentManagement);
+app.use("/payment", paymentManagement, subscriptionManagement);
 // console.log("onbaording: " + db.user_details);
 sequelize
   .sync()
