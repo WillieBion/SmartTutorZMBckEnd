@@ -49,6 +49,7 @@ router.post("/subscribe", (req, res) => {
 router.post("/smartTutor/callback", (req, res) => {
   const {} = req.body;
   console.log(req.body);
+  res.status(200).json(req.body);
 });
 
 module.exports = router;
