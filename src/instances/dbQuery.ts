@@ -34,7 +34,24 @@ const ADD_RECEIPT_QRY =
 
 /* Subscription */
 const ADD_SUBSCRIPTION_QRY =
-  "INSERT INTO subscriptions (user_id, trans_id, amount, period) VALUES (?, ?, ?, ?)";
+  "INSERT INTO subscriptions (user_id, trans_id, subscription) VALUES (?, ?, ?)";
+
+/* Update Password */
+const UPDATE_PASSWORD_QRY =
+  "UPDATE user_details SET password = ? WHERE user_name = ?";
+
+const GET_PASSWORD_QRY =
+  "SELECT password FROM user_details WHERE user_name = ?";
+
+/* Update user_status */
+const UPDATE_USER_STATUS_QRY =
+  "UPDATE user_details SET user_status = ? WHERE user_name = ?";
+
+const GET_TRANSID_QRY = "SELECT trans_id FROM subscriptions WHERE user_id = ?";
+
+const VERIFY_USERNAME_QRY =
+  "SELECT user_name FROM user_details WHERE user_name = ?";
+
 // const insertQuery = (tableName: string ) => {
 // String ADD_SUBJECT_QRY = `INSERT INTO ${tableName} ()
 // }
@@ -57,4 +74,9 @@ export const db_query = {
   GET_TOPIC_BY_SUBJECT,
   ADD_RECEIPT_QRY,
   ADD_SUBSCRIPTION_QRY,
+  UPDATE_PASSWORD_QRY,
+  GET_PASSWORD_QRY,
+  UPDATE_USER_STATUS_QRY,
+  GET_TRANSID_QRY,
+  VERIFY_USERNAME_QRY
 };

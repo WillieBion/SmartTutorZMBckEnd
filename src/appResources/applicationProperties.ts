@@ -8,5 +8,7 @@ export const properties = {
   DB_HOST: process.env.DB_HOST,
   DB: process.env.DB,
   ENC_KEY: process.env.SALT_ROUNDS,
-  PAYMENT_API: process.env.PRIMENET_API_KEY
+  PAYMENT_API: process.env.PRIMENET_API_KEY,
+  SMS_API: process.env.BULKSMS_API_KEY,
+  SMS_SENDERID: process.env.SMS_SENDERID
 };

@@ -5,6 +5,7 @@ const app = express();
 // const router = express.Router();
 // const Sequelize = require("sequelize");
 import { Sequelize } from "sequelize";
+import { generateOTP } from "./appResources/resources";
 
 //
 app.use(express.json());
@@ -53,6 +54,8 @@ const subscriptionManagement = require("./routes/subscription/subscription");
 // };
 // console.log(generateTransId());
 //use routes
+// const value = generateOTP();
+// console.log(value);
 app.use("/", onbaording);
 app.use("/", login);
 app.use(
@@ -66,7 +69,7 @@ app.use("/payment", paymentManagement, subscriptionManagement);
 // console.log("onbaording: " + db.user_details);
 sequelize
   .sync()
-  .then(() => {
+  .then(() => {     
     app.listen(PORT, () => {
       console.log(`listening on: http://localhost:${PORT}`);
     });

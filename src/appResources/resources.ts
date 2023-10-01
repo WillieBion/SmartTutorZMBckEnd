@@ -54,6 +54,10 @@ export const successMessages = {
   ADD_LESSON_SUCCESS: "You have successfully added a lesson",
   ADD_TOPIC_SUCCESS: "You have successfully added a topic",
   ADD_PAYMENT_SUCCESS: "You have successfully added a payment",
+  UPDATE_PASSWORD_SUCCESS: "You have successfully updated your password",
+  MATCHING_PASSWORD_SUCCESS: "Your passwords match",
+  RETREIVE_TRANSID_SUCCESS: "Your transaction has been successfully retrieved",
+  FORGOT_PASSWORD_SUCCESS: "OTP SMS has been sent to your mobile device",
 };
 
 // Base URL
@@ -67,6 +71,32 @@ export const generateTransId = () => {
 
   return prefix + randomer;
 };
+
+/* Random OTP Generator */
+export const generateOTP = () => {
+  const length = 8;
+  const charset =
+    "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  let otp = "";
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    otp += charset.charAt(randomIndex);
+  }
+
+  const message = `Your OTP is ${otp}`;
+
+  // return otp;
+  const urlEncodedMessage = encodeURIComponent(message);
+
+  return {
+    otp: otp,
+    senderMessgae: urlEncodedMessage,
+  };
+};
+
+// const randomOTP = generateOTP();
+// console.log("Random OTP:", randomOTP);
 
 //Payment Messages
 export const paymentMessages = {

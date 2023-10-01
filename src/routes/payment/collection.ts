@@ -17,47 +17,76 @@ import { database } from "../../instances/dbConfig";
 
 // const headers = {};
 
-router.post("/collections", async (req, res) => {
+router.post("/collections",(req, res) => {
   const { msisdn, amount } = req.body;
 
   const headers = {
     "X-Authorization": properties.PAYMENT_API,
     "Content-Type": "application/json",
   };
-  const transID = generateTransId();
-  const dataToPost = {
-    payer_number: msisdn,
-    external_reference: transID,
-    payment_narration: paymentMessages.NARRATION_MSG,
-    currency: "ZMW",
-    amount: amount,
-  };
+  // const transID = generateTransId();
 
-  try {
-    const primeResponse = await axios.post(
-      `${BASE_URL}/api/v2/transaction/collect`,
-      dataToPost,
-      { headers }
-    );
-    if (primeResponse.status === 202) {
-      console.log("Prompt was successfully sent");
+
+
+  database.query(db_query.GET_TRANSID_QRY, [msisdn], async (error, result) => {
+    console.log("Yeah: " + result)
+
+    if (error) {
       const dbResp = {
-        statusCode: successCodes.SERVER_SUCCESS,
-        message: { description: primeResponse.data.message },
+        statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+        message: error.code,
       };
-
       const resp = responseHandler(dbResp);
       res.status(resp.statusCode).json(resp);
-    }
-  } catch (error) {
-    const dbResp = {
-      statusCode: errorCodes.INTERNAL_SERVER_ERROR,
-      message: errorMessages.INTERNAL_SERVER_ERROR,
-    };
-    const resp = responseHandler(dbResp);
+    } else {
+      console.log("Yeah: " + result[0].trans_id)
 
-    res.status(500).json(resp);
-  }
+      const dataToPost = {
+        payer_number: msisdn,
+        external_reference: result[0].trans_id,
+        payment_narration: paymentMessages.NARRATION_MSG,
+        currency: "ZMW",
+        amount: amount,
+      };
+
+      // console.log(dataToPost)
+      // const dbResp = {
+      //   statusCode: successCodes.SERVER_SUCCESS,
+      //   message: { description: successMessages.RETREIVE_TRANSID_SUCCESS },
+      // };
+      // const resp = responseHandler(dbResp);
+      // res.status(successCodes.SERVER_SUCCESS).json(resp);
+      try {
+        const primeResponse = await axios.post(
+          `${BASE_URL}/api/v2/transaction/collect`,
+          dataToPost,
+          { headers }
+        );
+        if (primeResponse.status === 202) {
+          console.log("Prompt was successfully sent");
+          const dbResp = {
+            statusCode: successCodes.SERVER_SUCCESS,
+            message: { description: primeResponse.data.message },
+          };
+    
+          const resp = responseHandler(dbResp);
+          res.status(resp.statusCode).json(resp);
+        }
+      } catch (error) {
+        console.log(error);
+        const dbResp = {
+          statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+          message: errorMessages.INTERNAL_SERVER_ERROR,
+        };
+        const resp = responseHandler(dbResp);
+    
+        res.status(500).json(resp);
+      }
+
+    }
+  });
+
+
 
   // else {
   //   // console.log("Prompt failed: " + primeResponse.status);
@@ -65,15 +94,15 @@ router.post("/collections", async (req, res) => {
   // }
 });
 
-
 /* RECEIPT */
 router.post("/onPayment/receipt", (req, res) => {
-  const { trans_id, amount, period, user_id } = req.body;
+  const { amount, period, user_id } = req.body;
   /* Use MSISDN as identifier */
+  const transID = generateTransId();
   try {
     database.query(
       db_query.ADD_RECEIPT_QRY,
-      [trans_id, amount, period, user_id],
+      [transID, amount, period, user_id],
       (error, result) => {
         if (error) {
           const dbResp = {
