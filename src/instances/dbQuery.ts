@@ -35,6 +35,9 @@ const ADD_RECEIPT_QRY =
 /* Subscription */
 const ADD_SUBSCRIPTION_QRY =
   "INSERT INTO subscriptions (user_id, trans_id, subscription) VALUES (?, ?, ?)";
+  const GET_SUBSCRIPTION_DETAILS_QRY = "SELECT * FROM subscription_details";
+  const GET_SUBSCRIPTION_DETAILS_BY_QRY = "SELECT * FROM subscription_details WHERE id = ?"
+
 
 /* Update Password */
 const UPDATE_PASSWORD_QRY =
@@ -78,5 +81,7 @@ export const db_query = {
   GET_PASSWORD_QRY,
   UPDATE_USER_STATUS_QRY,
   GET_TRANSID_QRY,
-  VERIFY_USERNAME_QRY
+  VERIFY_USERNAME_QRY,
+  GET_SUBSCRIPTION_DETAILS_QRY,
+  GET_SUBSCRIPTION_DETAILS_BY_QRY
 };

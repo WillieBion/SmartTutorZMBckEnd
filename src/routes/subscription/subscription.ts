@@ -93,6 +93,33 @@ router.post("/subscribe", (req, res) => {
   }
 });
 
+/* Get Subscription details */
+
+router.get("/getSubscriptionDetails", (req, res) => {
+  // const { id } = req.params;
+
+  database.query(
+    db_query.GET_SUBSCRIPTION_DETAILS_QRY,
+    (error, result) => {
+      if (error) {
+        const dbResp = {
+          statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+          message: errorMessages.INTERNAL_SERVER_ERROR,
+        };
+        const resp = responseHandler(dbResp);
+        res.status(resp.statusCode).json(resp);
+      } else {
+        const dbResp = {
+          statusCode: successCodes.SERVER_SUCCESS,
+          message: result,
+        };
+        const resp = responseHandler(dbResp);
+        res.status(resp.statusCode).json(resp);
+      }
+    }
+  );
+});
+
 router.post("/smartTutor/callback", (req, res) => {
   const { amount, final_status, transaction_id, payer_number, status_message } =
     req.body;
