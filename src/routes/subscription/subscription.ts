@@ -123,6 +123,7 @@ router.get("/getSubscriptionDetails", (req, res) => {
 router.post("/smartTutor/callback", (req, res) => {
   const { amount, final_status, transaction_id, payer_number, status_message } =
     req.body;
+    console.log(req.body);
 
   if (final_status === 300) {
     try {
