@@ -47,7 +47,7 @@ router.post("/addExamPaper", (req, res) => {
     };
     const resp = responseHandler(dbResp);
 
-    res.status(500).json(resp);
+    res.status(resp.statusCode).json(resp);
   }
 });
 

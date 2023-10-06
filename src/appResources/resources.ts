@@ -59,6 +59,7 @@ export const successMessages = {
   RETREIVE_TRANSID_SUCCESS: "Your transaction has been successfully retrieved",
   FORGOT_PASSWORD_SUCCESS: "OTP SMS has been sent to your mobile device",
   UPDATED_SUBSCRIPTION_SUCCESS: "Subscription Successfully Updated",
+  RETREIVE_USER_DETAILS_SUCCESS: "Successfully retrieved user details",
 };
 
 // Base URL

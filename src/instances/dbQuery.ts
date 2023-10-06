@@ -1,3 +1,4 @@
+const GET_USER_DETAILS = "SELECT * FROM user_details WHERE user_name = ?";
 const LOGIN_QRY = "SELECT * FROM user_details WHERE msisdn = ?;";
 // const ADD_SUBJECT_QRY = "INSERT INTO
 const ADD_SUBJECT_QRY = "INSERT INTO subject (name, description) VALUES (?,?)";
@@ -35,9 +36,9 @@ const ADD_RECEIPT_QRY =
 /* Subscription */
 const ADD_SUBSCRIPTION_QRY =
   "INSERT INTO subscriptions (user_id, trans_id, subscription) VALUES (?, ?, ?)";
-  const GET_SUBSCRIPTION_DETAILS_QRY = "SELECT * FROM subscription_details";
-  const GET_SUBSCRIPTION_DETAILS_BY_QRY = "SELECT * FROM subscription_details WHERE id = ?"
-
+const GET_SUBSCRIPTION_DETAILS_QRY = "SELECT * FROM subscription_details";
+const GET_SUBSCRIPTION_DETAILS_BY_QRY =
+  "SELECT * FROM subscription_details WHERE id = ?";
 
 /* Update Password */
 const UPDATE_PASSWORD_QRY =
@@ -51,6 +52,9 @@ const UPDATE_USER_STATUS_QRY =
   "UPDATE user_details SET user_status = ? WHERE user_name = ?";
 
 const GET_TRANSID_QRY = "SELECT trans_id FROM subscriptions WHERE user_id = ?";
+
+const GET_USER_ID_BY_TRANSID =
+  "SELECT user_id FROM subscriptions WHERE trans_id = ?";
 
 const VERIFY_USERNAME_QRY =
   "SELECT user_name FROM user_details WHERE user_name = ?";
@@ -83,5 +87,7 @@ export const db_query = {
   GET_TRANSID_QRY,
   VERIFY_USERNAME_QRY,
   GET_SUBSCRIPTION_DETAILS_QRY,
-  GET_SUBSCRIPTION_DETAILS_BY_QRY
+  GET_SUBSCRIPTION_DETAILS_BY_QRY,
+  GET_USER_DETAILS,
+  GET_USER_ID_BY_TRANSID
 };
