@@ -53,6 +53,7 @@ router.post("/subscribe", (req, res) => {
             payment_narration: paymentMessages.NARRATION_MSG,
             currency: "ZMW",
             amount: amount,
+            account_number: user_name,
           };
 
           /* Make primeNet post  */
