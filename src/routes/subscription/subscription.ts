@@ -118,8 +118,14 @@ router.get("/getSubscriptionDetails", (req, res) => {
 });
 
 router.post("/smartTutor/callback", (req, res) => {
-  const { amount, final_status, transaction_id, payer_number, status_message, order_id } =
-    req.body;
+  const {
+    amount,
+    final_status,
+    transaction_id,
+    payer_number,
+    status_message,
+    order_id,
+  } = req.body;
   console.log("i am  body" + req.body);
 
   if (final_status === 300) {
@@ -143,10 +149,10 @@ router.post("/smartTutor/callback", (req, res) => {
             // };
             // const resp = responseHandler(dbResp);
             // res.status(resp.statusCode).json(resp);
-            console.log("I am result: " + result[0]);
+            // console.log("I am result: " + result[0]);
             database.query(
               db_query.UPDATE_USER_STATUS_QRY,
-              [2, result.user_id],
+              [2, result[0].user_id],
               (err, result) => {
                 if (err) {
                   const dbResp = {
@@ -155,13 +161,15 @@ router.post("/smartTutor/callback", (req, res) => {
                   };
                   const resp = responseHandler(dbResp);
                   res.status(resp.statusCode).json(resp);
+                  return;
+                } else {
+                  const dbResp = {
+                    statusCode: successCodes.SERVER_SUCCESS,
+                    message: successMessages.UPDATED_SUBSCRIPTION_SUCCESS,
+                  };
+                  const resp = responseHandler(dbResp);
+                  res.status(resp.statusCode).json(resp);
                 }
-                const dbResp = {
-                  statusCode: successCodes.SERVER_SUCCESS,
-                  message: successMessages.UPDATED_SUBSCRIPTION_SUCCESS,
-                };
-                const resp = responseHandler(dbResp);
-                res.status(resp.statusCode).json(resp);
               }
             );
           }
