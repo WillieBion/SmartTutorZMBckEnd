@@ -98,44 +98,63 @@ router.post("/subscribe", (req, res) => {
 router.get("/getSubscriptionDetails", (req, res) => {
   // const { id } = req.params;
 
-  database.query(
-    db_query.GET_SUBSCRIPTION_DETAILS_QRY,
-    (error, result) => {
-      if (error) {
-        const dbResp = {
-          statusCode: errorCodes.INTERNAL_SERVER_ERROR,
-          message: errorMessages.INTERNAL_SERVER_ERROR,
-        };
-        const resp = responseHandler(dbResp);
-        res.status(resp.statusCode).json(resp);
-      } else {
-        const dbResp = {
-          statusCode: successCodes.SERVER_SUCCESS,
-          message: result,
-        };
-        const resp = responseHandler(dbResp);
-        res.status(resp.statusCode).json(resp);
-      }
+  database.query(db_query.GET_SUBSCRIPTION_DETAILS_QRY, (error, result) => {
+    if (error) {
+      const dbResp = {
+        statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+        message: errorMessages.INTERNAL_SERVER_ERROR,
+      };
+      const resp = responseHandler(dbResp);
+      res.status(resp.statusCode).json(resp);
+    } else {
+      const dbResp = {
+        statusCode: successCodes.SERVER_SUCCESS,
+        message: result,
+      };
+      const resp = responseHandler(dbResp);
+      res.status(resp.statusCode).json(resp);
     }
-  );
+  });
 });
 
 router.post("/smartTutor/callback", (req, res) => {
-  const { amount, final_status, transaction_id, payer_number, status_message } =
+  const { amount, final_status, transaction_id, payer_number, status_message, account_number } =
     req.body;
-    console.log(req.body);
+  console.log(req.body);
 
   if (final_status === 300) {
     try {
       database.query(
         db_query.UPDATE_USER_STATUS_QRY,
-        [2, payer_number],
-        (err, result) => {}
+        [2, account_number],
+        (err, result) => {
+          if (err) {
+            const dbResp = {
+              statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+              message: err.code,
+            };
+            const resp = responseHandler(dbResp);
+            res.status(resp.statusCode).json(resp);
+          } else {
+            const dbResp = {
+              statusCode: successCodes.SERVER_SUCCESS,
+              message: successMessages.UPDATED_SUBSCRIPTION_SUCCESS,
+            };
+            const resp = responseHandler(dbResp);
+            res.status(resp.statusCode).json(resp);
+          }
+        }
       );
-    } catch (error) {}
+    } catch (error) {
+      const dbResp = {
+        statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+        message: errorMessages.INTERNAL_SERVER_ERROR,
+      };
+      const resp = responseHandler(dbResp);
+      res.status(resp.statusCode).json(resp);
+    }
   }
   console.log(req.body);
   res.status(200).json(req.body);
 });
-
-module.exports = router;
+ module.exports = router;
