@@ -143,7 +143,7 @@ router.post("/smartTutor/callback", (req, res) => {
             // };
             // const resp = responseHandler(dbResp);
             // res.status(resp.statusCode).json(resp);
-            console.log("I am result: " + result);
+            console.log("I am result: " + result[0]);
             database.query(
               db_query.UPDATE_USER_STATUS_QRY,
               [2, result.user_id],
