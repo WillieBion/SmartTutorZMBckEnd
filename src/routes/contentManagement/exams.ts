@@ -25,7 +25,7 @@ router.post("/addExamPaper", (req, res) => {
         if (error) {
           const dbResp = {
             statusCode: errorCodes.INTERNAL_SERVER_ERROR,
-            message: errorMessages.INTERNAL_SERVER_ERROR,
+            message: error.code,
           };
           const resp = responseHandler(dbResp);
           res.status(resp.statusCode).json(resp);
