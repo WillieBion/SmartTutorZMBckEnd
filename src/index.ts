@@ -1,6 +1,7 @@
 import express from "express";
 const app = express();
 // import * as db from './models';
+const cors = require('cors');
 
 // const router = express.Router();
 // const Sequelize = require("sequelize");
@@ -56,6 +57,8 @@ const subscriptionManagement = require("./routes/subscription/subscription");
 //use routes
 // const value = generateOTP();
 // console.log(value);
+app.use(cors());
+// app.use(express.json())
 app.use("/", onbaording);
 app.use("/", login);
 app.use(
