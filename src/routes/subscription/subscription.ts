@@ -118,7 +118,7 @@ router.get("/getSubscriptionDetails", (req, res) => {
 });
 
 router.post("/smartTutor/callback", (req, res) => {
-  const { amount, final_status, transaction_id, payer_number, status_message } =
+  const { amount, final_status, transaction_id, payer_number, status_message, order_id } =
     req.body;
   console.log(req.body);
 
@@ -126,7 +126,7 @@ router.post("/smartTutor/callback", (req, res) => {
     try {
       database.query(
         db_query.GET_USER_ID_BY_TRANSID,
-        [transaction_id],
+        [order_id],
         (err, result) => {
           console.log(result);
           if (err) {
