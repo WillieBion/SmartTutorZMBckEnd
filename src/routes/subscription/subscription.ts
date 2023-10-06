@@ -145,7 +145,7 @@ router.post("/smartTutor/callback", (req, res) => {
             // res.status(resp.statusCode).json(resp);
             database.query(
               db_query.UPDATE_USER_STATUS_QRY,
-              [2, result[0].user_id],
+              [2, result.user_id],
               (err, result) => {
                 if (err) {
                   const dbResp = {
