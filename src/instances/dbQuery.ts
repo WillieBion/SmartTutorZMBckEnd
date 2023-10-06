@@ -1,7 +1,8 @@
 const GET_USER_DETAILS = "SELECT * FROM user_details WHERE user_name = ?";
 const LOGIN_QRY = "SELECT * FROM user_details WHERE msisdn = ?;";
 // const ADD_SUBJECT_QRY = "INSERT INTO
-const ADD_SUBJECT_QRY = "INSERT INTO subject (name, description) VALUES (?,?)";
+const ADD_SUBJECT_QRY =
+  "INSERT INTO subject (name, pictureURL, lesson_title, lesson_description, exam_title, exam_description) VALUES (?,?, ?, ?,?, ?)";
 const GET_SUBJECT_QRY = "SELECT * FROM subject WHERE id = ?";
 const GET_ALL_SUBJECT_QRY = "SELECT * FROM subject";
 /*Exams */
@@ -89,5 +90,5 @@ export const db_query = {
   GET_SUBSCRIPTION_DETAILS_QRY,
   GET_SUBSCRIPTION_DETAILS_BY_QRY,
   GET_USER_DETAILS,
-  GET_USER_ID_BY_TRANSID
+  GET_USER_ID_BY_TRANSID,
 };

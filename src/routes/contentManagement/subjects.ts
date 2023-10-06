@@ -11,12 +11,26 @@ import { db_query } from "../../instances/dbQuery";
 import { IContentManagemnt } from "../../appResources/types/contentManagement";
 
 router.post("/AddSubjects", (req, res) => {
-  const { name, description } = req.body;
+  const {
+    name,
+    pictureURL,
+    lesson_title,
+    lesson_description,
+    exam_title,
+    exam_description,
+  } = req.body;
 
   try {
     database.query(
       db_query.ADD_SUBJECT_QRY,
-      [name, description],
+      [
+        name,
+        pictureURL,
+        lesson_title,
+        lesson_description,
+        exam_title,
+        exam_description,
+      ],
       (error, results) => {
         if (error) {
           const dbResp = {
