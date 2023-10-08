@@ -317,8 +317,6 @@ router.get("/getUserDetails/(:id)", (req, res) => {
   const { id } = req.params;
   try {
     database.query(db_query.GET_USER_DETAILS, id, (err, result) => {
-      const user = result[0];
-       const {password, ...user_details} = user
       if (err) {
         const dbResp = {
           statusCode: errorCodes.INTERNAL_SERVER_ERROR,
@@ -327,16 +325,20 @@ router.get("/getUserDetails/(:id)", (req, res) => {
         const resp = responseHandler(dbResp);
         res.status(resp.statusCode).json(resp);
       } else {
-        const dbResp = {
-          statusCode: successCodes.SERVER_SUCCESS,
-          message: {
-            description: successMessages.RETREIVE_USER_DETAILS_SUCCESS,
-            payload: user_details,
-          },
-        };
+        const user = result[0];
+        if (user) {
+          const { password, ...user_details } = user;
+          const dbResp = {
+            statusCode: successCodes.SERVER_SUCCESS,
+            message: {
+              description: successMessages.RETREIVE_USER_DETAILS_SUCCESS,
+              payload: user_details,
+            },
+          };
 
-        const resp = responseHandler(dbResp);
-        res.status(successCodes.SERVER_SUCCESS).json(resp);
+          const resp = responseHandler(dbResp);
+          res.status(successCodes.SERVER_SUCCESS).json(resp);
+        }
       }
     });
   } catch (error) {
