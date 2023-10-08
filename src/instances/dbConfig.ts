@@ -13,10 +13,10 @@ database.connect((err, conn) => {
     if (err){
         console.log("Database connection error" + err);
     }else{
-        console.log("Database connection") 
+        console.log("Database connection edu_app_prod"); 
     }
 })
-const db = "edu_app";
+const db = "edu_app_prod";
 const username = "root";
 const password = "Willie#2045@1998";
 
