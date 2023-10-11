@@ -10,7 +10,7 @@ const ADD_EXAM_QRY =
   "INSERT INTO exam (title, duration, media_type, media_value, year, subject) VALUES (?, ?, ?, ?, ?, ?)";
 const GET_EXAM_QRY = "SELECT * FROM exam WHERE id = ?";
 const GET_ALL_EXAM_QRY = "SELECT * FROM exam";
-const GET_EXAM_BY_SUBJECT_QRY = "SELECT * FROM exam WHERE subject = ?";
+const GET_EXAM_BY_SUBJECT_QRY = "SELECT * FROM exam WHERE subject_id = ?";
 /* Exam Content */
 const ADD_EXAM_CONTENT_QRY =
   "INSERT INTO exam_content (exam, exam_type, exam_link) VALUES (?, ?, ?)";
