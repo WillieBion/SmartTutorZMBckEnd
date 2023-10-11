@@ -73,28 +73,31 @@ router.get("/getExam/(:id)", (req, res) => {
   });
 });
 
+// router.get("/getExamBySubject/(:id)", (req, res) => {
+//   const { id } = req.params;
 
-router.get("/getExamBySubject/(:id)", (req, res) => {
-  const { id } = req.params;
-
-  database.query(db_query.GET_EXAM_BY_SUBJECT_QRY, id, (err, result: IExam[]) => {
-    if (err) {
-      const dbResp = {
-        statusCode: errorCodes.INTERNAL_SERVER_ERROR,
-        message: errorMessages.INTERNAL_SERVER_ERROR,
-      };
-      const resp = responseHandler(dbResp);
-      res.status(resp.statusCode).json(resp);
-    } else {
-      const dbResp = {
-        statusCode: successCodes.SERVER_SUCCESS,
-        message: result,
-      };
-      const resp = responseHandler(dbResp);
-      res.status(resp.statusCode).json(resp);
-    }
-  });
-});
+//   database.query(
+//     db_query.GET_EXAM_BY_SUBJECT_QRY,
+//     id,
+//     (err, result: IExam[]) => {
+//       if (err) {
+//         const dbResp = {
+//           statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+//           message: errorMessages.INTERNAL_SERVER_ERROR,
+//         };
+//         const resp = responseHandler(dbResp);
+//         res.status(resp.statusCode).json(resp);
+//       } else {
+//         const dbResp = {
+//           statusCode: successCodes.SERVER_SUCCESS,
+//           message: result,
+//         };
+//         const resp = responseHandler(dbResp);
+//         res.status(resp.statusCode).json(resp);
+//       }
+//     }
+//   );
+// });
 
 router.get("/getAllExam", (req, res) => {
   try {
@@ -252,7 +255,14 @@ router.get("/getExamBySubject/(:id)", (req, res) => {
         res.status(successCodes.SERVER_SUCCESS).json(resp);
       }
     });
-  } catch (error) {}
+  } catch (error) {
+    const dbResp = {
+      statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+      message: errorMessages.INTERNAL_SERVER_ERROR,
+    };
+    const resp = responseHandler(dbResp);
+    res.status(resp.statusCode).json(resp);
+  }
 });
 
 module.exports = router;

@@ -183,6 +183,13 @@ router.post("/smartTutor/callback", (req, res) => {
       const resp = responseHandler(dbResp);
       res.status(resp.statusCode).json(resp);
     }
+  } else {
+    const dbResp = {
+      statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+      message: errorMessages.INTERNAL_SERVER_ERROR,
+    };
+    const resp = responseHandler(dbResp);
+    res.status(resp.statusCode).json(resp);
   }
 });
 module.exports = router;
