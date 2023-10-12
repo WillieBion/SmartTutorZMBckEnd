@@ -75,27 +75,47 @@ export const generateTransId = () => {
 };
 
 /* Random OTP Generator */
+// export const generateOTP = () => {
+//   const length = 8;
+//   const charset =
+//     "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+//   let otp = "";
+
+//   for (let i = 0; i < length; i++) {
+//     const randomIndex = Math.floor(Math.random() * charset.length);
+//     otp += charset.charAt(randomIndex);
+//   }
+
+//   const message = `Your OTP is ${otp}`;
+
+//   // return otp;
+//   const urlEncodedMessage = encodeURIComponent(message);
+
+//   return {
+//     otp: otp,
+//     senderMessgae: urlEncodedMessage,
+//   };
+// };
+
 export const generateOTP = () => {
-  const length = 8;
-  const charset =
-    "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  const length = 6;
+  const charset = "0123456789"; // Only digits 0-9
   let otp = "";
 
   for (let i = 0; i < length; i++) {
     const randomIndex = Math.floor(Math.random() * charset.length);
     otp += charset.charAt(randomIndex);
   }
-
   const message = `Your OTP is ${otp}`;
 
-  // return otp;
+  //   // return otp;
   const urlEncodedMessage = encodeURIComponent(message);
 
-  return {
-    otp: otp,
-    senderMessgae: urlEncodedMessage,
-  };
+  return { otp, senderMessgae: urlEncodedMessage };
 };
+
+const randomDigitsOTP = generateOTP();
+console.log(randomDigitsOTP);
 
 // const randomOTP = generateOTP();
 // console.log("Random OTP:", randomOTP);
