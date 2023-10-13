@@ -1,15 +1,24 @@
 import express from "express";
 const app = express();
 // import * as db from './models';
-const cors = require('cors');
+const cors = require("cors");
 
 // const router = express.Router();
 // const Sequelize = require("sequelize");
 import { Sequelize } from "sequelize";
 import { generateOTP } from "./appResources/resources";
+import { validateToken } from "./appResources/jwtToken";
 
 //
 app.use(express.json());
+//This is to ensure that all routes but for the registration and Login routes require a valid token
+app.use((req, res, next) => {
+  if (req.path === "/login" || req.path === "/register" || req.path === "/payment/smartTutor/callback") {
+    return next();
+  }
+
+  validateToken(req, res, next);
+});
 
 const PORT = 1430;
 
@@ -72,7 +81,7 @@ app.use("/payment", paymentManagement, subscriptionManagement);
 // console.log("onbaording: " + db.user_details);
 sequelize
   .sync()
-  .then(() => {     
+  .then(() => {
     app.listen(PORT, () => {
       console.log(`listening on: http://localhost:${PORT}`);
     });
