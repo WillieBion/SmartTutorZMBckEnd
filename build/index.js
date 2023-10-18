@@ -9,7 +9,8 @@ const app = (0, express_1.default)();
 const cors = require("cors");
 //Set Path
 const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '.env') });
+require('dotenv').config({ path: path.join(__dirname, '../../.env') });
+// console.log(path);
 // const router = express.Router();
 // const Sequelize = require("sequelize");
 const sequelize_1 = require("sequelize");
