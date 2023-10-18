@@ -3,6 +3,10 @@ const app = express();
 // import * as db from './models';
 const cors = require("cors");
 
+//Set Path
+const path = require('path'); 
+require('dotenv').config({ path: path.join(__dirname, '.env') });
+
 // const router = express.Router();
 // const Sequelize = require("sequelize");
 import { Sequelize } from "sequelize";

@@ -7,6 +7,9 @@ const express_1 = __importDefault(require("express"));
 const app = (0, express_1.default)();
 // import * as db from './models';
 const cors = require("cors");
+//Set Path
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 // const router = express.Router();
 // const Sequelize = require("sequelize");
 const sequelize_1 = require("sequelize");
