@@ -30,16 +30,16 @@ router.post("/chatbot", (req, res) => {
       },
       { headers }
     );
-    if (openAIResponse.status === 202) {
-      console.log("Prompt was successfully sent");
-      const dbResp = {
+    if (openAIResponse.status === 200) {
+      console.log("success");
+      const serverResp = {
         statusCode: successCodes.SERVER_SUCCESS,
         message: {
           description: openAIResponse.data.choices[0].message.content,
         },
       };
 
-      const resp = responseHandler(dbResp);
+      const resp = responseHandler(serverResp);
       res.status(resp.statusCode).json(resp);
     }
   } catch (error) {
