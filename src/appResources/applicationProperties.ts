@@ -10,5 +10,6 @@ export const properties = {
   ENC_KEY: process.env.SALT_ROUNDS,
   PAYMENT_API: process.env.PRIMENET_API_KEY,
   SMS_API: process.env.BULKSMS_API_KEY,
-  SMS_SENDERID: process.env.SMS_SENDERID
+  SMS_SENDERID: process.env.SMS_SENDERID,
+  OPENAI_KEY: process.env.OPENAI_API_KEY
 };
