@@ -60,6 +60,10 @@ const paymentManagement = require("./routes/payment/collection");
 /* Subscription */
 const subscriptionManagement = require("./routes/subscription/subscription");
 
+// chat
+const chat = require("./routes/chat/stChatbot");
+
+
 // const generateTransId = () => {
 //   const prefix = "0000";
 //   const randomer = Math.floor(Math.random() * 100000000)
@@ -84,6 +88,7 @@ app.use(
   TopicsManagement
 );
 app.use("/payment", paymentManagement, subscriptionManagement);
+app.use("/chat", chat);
 // console.log("onbaording: " + db.user_details);
 sequelize
   .sync()
