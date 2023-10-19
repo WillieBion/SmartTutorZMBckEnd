@@ -20,7 +20,7 @@ router.post("/chatbot", (req, res) => {
   // impliment async await
   // also verify logic
   try {
-    const openAIResponse = axios
+    axios
       .post(
         `https://api.openai.com/v1/chat/completions`,
         {
