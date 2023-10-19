@@ -1,7 +1,13 @@
 import axios from "axios";
 
 import { properties } from "../../appResources/applicationProperties";
-import { errorCodes, errorMessages, responseHandler, router, successCodes } from "../../appResources/resources";
+import {
+  errorCodes,
+  errorMessages,
+  responseHandler,
+  router,
+  successCodes,
+} from "../../appResources/resources";
 
 router.post("/chatbot", (req, res) => {
   const { messages } = req.body;
@@ -14,34 +20,39 @@ router.post("/chatbot", (req, res) => {
   // impliment async await
   // also verify logic
   try {
-    const openAIResponse = axios.post(
-      `https://api.openai.com/v1/chat/completions`,
-      {
-        model: "gpt-3.5-turbo",
-        temperature: 0.2,
-        // max_tokens: 150,
-        top_p: 0.7,
-        messages: [
-          ...messages.map((message) => ({
-            role: "user",
-            content: `${message.text}`,
-          })),
-        ],
-      },
-      { headers }
-    );
-    if (openAIResponse.status === 200) {
-      console.log("success");
-      const serverResp = {
-        statusCode: successCodes.SERVER_SUCCESS,
-        message: {
-          description: openAIResponse.data.choices[0].message.content,
+    const openAIResponse = axios
+      .post(
+        `https://api.openai.com/v1/chat/completions`,
+        {
+          model: "gpt-3.5-turbo",
+          temperature: 0.2,
+          // max_tokens: 150,
+          top_p: 0.7,
+          messages: [
+            ...messages.map((message: any) => ({
+              role: "user",
+              content: `${message.text}`,
+            })),
+          ],
         },
-      };
+        { headers }
+      )
+      .then((response: any) => {
+        console.log("CHAT_RES: ", response);
+        const aiResponse = response.data.choices[0].message.content;
+        if (response.status === 200) {
+          console.log("success");
+          const serverResp = {
+            statusCode: successCodes.SERVER_SUCCESS,
+            message: {
+              description: aiResponse,
+            },
+          };
 
-      const resp = responseHandler(serverResp);
-      res.status(resp.statusCode).json(resp);
-    }
+          const resp = responseHandler(serverResp);
+          res.status(resp.statusCode).json(resp);
+        }
+      });
   } catch (error) {
     console.log(error);
     const dbResp = {
