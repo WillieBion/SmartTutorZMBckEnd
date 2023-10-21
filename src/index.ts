@@ -19,7 +19,7 @@ import { validateToken } from "./appResources/jwtToken";
 app.use(express.json());
 //This is to ensure that all routes but for the registration and Login routes require a valid token
 app.use((req, res, next) => {
-  if (req.path === "/login" || req.path === "/register" || req.path === "/payment/smartTutor/callback") {
+  if (req.path === "/login" || req.path === "/register" || req.path === "/payment/smartTutor/callback" || req.path === "/forgotpassword/otp") {
     return next();
   }
 
@@ -60,6 +60,8 @@ const paymentManagement = require("./routes/payment/collection");
 /* Subscription */
 const subscriptionManagement = require("./routes/subscription/subscription");
 
+// chat
+const chat = require("./routes/chat/stChatbot");
 // const generateTransId = () => {
 //   const prefix = "0000";
 //   const randomer = Math.floor(Math.random() * 100000000)
@@ -84,6 +86,8 @@ app.use(
   TopicsManagement
 );
 app.use("/payment", paymentManagement, subscriptionManagement);
+app.use("/chat", chat);
+
 // console.log("onbaording: " + db.user_details);
 sequelize
   .sync()
