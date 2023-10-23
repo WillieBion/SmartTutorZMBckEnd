@@ -109,7 +109,7 @@ export const generateOTP = () => {
   // const message = `Your OTP is ${otp}`;
   const message = `Your one-time password is ${otp}. 
   Change this password after you login to your SmartTutor ZM account. 
-  If you did not make this request, please contact us at etutorzambia@gmail.com.`
+  Contact support if you didn't initiate this request.`
 
   //   // return otp;
   const urlEncodedMessage = encodeURIComponent(message);
