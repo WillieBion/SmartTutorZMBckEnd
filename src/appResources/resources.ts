@@ -106,7 +106,10 @@ export const generateOTP = () => {
     const randomIndex = Math.floor(Math.random() * charset.length);
     otp += charset.charAt(randomIndex);
   }
-  const message = `Your OTP is ${otp}`;
+  // const message = `Your OTP is ${otp}`;
+  const message = `Your one-time password is ${otp}. 
+  Change this password after you login to your SmartTutor ZM account. 
+  If you did not make this request, please contact us at etutorzambia@gmail.com.`
 
   //   // return otp;
   const urlEncodedMessage = encodeURIComponent(message);
