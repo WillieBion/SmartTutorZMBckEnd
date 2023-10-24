@@ -205,6 +205,43 @@ router.post('/logout', (req, res) => {
   })
 })
 
+//Same as log out but for device log out
+router.post('/devicelogout', (req, res) => {
+  const { user_name } = req.body
+  //Delete session
+  database.query(db_query.DELETE_SESSION_QRY, [user_name], (err, result) => {
+    if (err) {
+      const dbResp = {
+        statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+        message: errorMessages.INTERNAL_SERVER_ERROR,
+      };
+      const resp = responseHandler(dbResp);
+      res.status(resp.statusCode).json(resp);
+    } else {
+      console.log("result: :" + result[0])
+      // if (typeof result[0] !== 'undefined') {
+        const respo = {
+          statusCode: successCodes.SERVER_SUCCESS,
+          message: successMessages.LOGOUT_SUCCESS
+        };
+        const resp = responseHandler(respo);
+
+        res.status(resp.statusCode).json(resp);
+      // } else {
+      //   const respo = {
+      //     statusCode: errorCodes.BAD_REQUEST,
+      //     message: errorMessages.USER_NOT_FOUND
+      //   };
+      //   const resp = responseHandler(respo);
+
+      //   res.status(resp.statusCode).json(resp);
+      // }
+
+    }
+
+  })
+})
+
 //Authenticated route
 router.get('/authenticated', (req, res) => {
   // const {} = req.query;

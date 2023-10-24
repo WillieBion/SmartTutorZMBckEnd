@@ -4,7 +4,7 @@ const app = express();
 const cors = require("cors");
 
 //Set Path
-const path = require('path'); 
+const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
 // console.log(path);
@@ -19,7 +19,7 @@ import { validateToken } from "./appResources/jwtToken";
 app.use(express.json());
 //This is to ensure that all routes but for the registration and Login routes require a valid token
 app.use((req, res, next) => {
-  if (req.path === "/login" || req.path === "/register" || req.path === "/payment/smartTutor/callback" || req.path === "/forgotpassword/otp") {
+  if (req.path === "/login" || req.path === "/register" || req.path === "/payment/smartTutor/callback" || req.path === "/forgotpassword/otp" || req.path === "/devicelogout") {
     return next();
   }
 
