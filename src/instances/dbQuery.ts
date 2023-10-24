@@ -64,7 +64,7 @@ const VERIFY_USERNAME_QRY =
 const GET_SESSION_QRY = "SELECT * FROM sessions WHERE user_name = ?";
 const GET_SESSION_AUTH_STATUS_QRY = "SELECT * FROM sessions WHERE user_name = ? AND device_id = ?";
 const ADD_SESSION_QRY = "INSERT INTO sessions (user_name, device_id, is_valid) VALUES (?, ?, ?)";
-const DELETE_SESSION_QRY = "DELETE FROM sessions WHERE user_name = ? AND device_id = ?";
+const DELETE_SESSION_QRY = "DELETE FROM sessions WHERE user_name = ?";
 // const insertQuery = (tableName: string ) => {
 // String ADD_SUBJECT_QRY = `INSERT INTO ${tableName} ()
 // }

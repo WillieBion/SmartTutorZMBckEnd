@@ -15,6 +15,7 @@ import bcrypt from "bcrypt";
 import { properties } from "../../appResources/applicationProperties";
 import { db_query } from "../../instances/dbQuery";
 import axios from "axios";
+import { generateToken } from "../../appResources/jwtToken";
 // const db = require('../../models');
 
 router.post("/register", (req: any, res: any) => {
@@ -50,6 +51,10 @@ router.post("/register", (req: any, res: any) => {
           } else {
             console.log("We are a success, Welcome onboard");
             const { password, ...userDetails } = req.body;
+            const tokenGenerator = { msisdn, user_name, password: hash };
+
+            const userAccToken = generateToken(tokenGenerator);
+
             console.log(userDetails);
             const dbResp = {
               statusCode: successCodes.SERVER_SUCCESS,
@@ -57,6 +62,7 @@ router.post("/register", (req: any, res: any) => {
                 description: successMessages.WELCOME_ABOARD,
                 user_details: userDetails,
               },
+              jwtToken: userAccToken
             };
             const resp = responseHandler(dbResp);
             res.status(resp.statusCode).json(resp);

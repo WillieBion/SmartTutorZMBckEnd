@@ -170,9 +170,9 @@ router.post("/login", (req, res) => {
 
 //Log out session 
 router.post('/logout', (req, res) => {
-  const { user_name, device_id } = req.body
+  const { user_name } = req.body
   //Delete session
-  database.query(db_query.DELETE_SESSION_QRY, [user_name, device_id], (err, result) => {
+  database.query(db_query.DELETE_SESSION_QRY, [user_name], (err, result) => {
     if (err) {
       const dbResp = {
         statusCode: errorCodes.INTERNAL_SERVER_ERROR,
@@ -181,14 +181,25 @@ router.post('/logout', (req, res) => {
       const resp = responseHandler(dbResp);
       res.status(resp.statusCode).json(resp);
     } else {
-      console.log("result: :" + result)
-      const respo = {
-        statusCode: successCodes.SERVER_SUCCESS,
-        message: successMessages.LOGOUT_SUCCESS
-      };
-      const resp = responseHandler(respo);
+      console.log("result: :" + result[0])
+      // if (typeof result[0] !== 'undefined') {
+        const respo = {
+          statusCode: successCodes.SERVER_SUCCESS,
+          message: successMessages.LOGOUT_SUCCESS
+        };
+        const resp = responseHandler(respo);
 
-      res.status(resp.statusCode).json(resp);
+        res.status(resp.statusCode).json(resp);
+      // } else {
+      //   const respo = {
+      //     statusCode: errorCodes.BAD_REQUEST,
+      //     message: errorMessages.USER_NOT_FOUND
+      //   };
+      //   const resp = responseHandler(respo);
+
+      //   res.status(resp.statusCode).json(resp);
+      // }
+
     }
 
   })
@@ -210,8 +221,8 @@ router.get('/authenticated', (req, res) => {
       const resp = responseHandler(dbResp);
       res.status(resp.statusCode).json(resp);
     } else {
-      if (user_name === result[0]?.user_name ||  device_id === result[0]?.device_id){
-        
+      if (user_name === result[0]?.user_name || device_id === result[0]?.device_id) {
+
         const respo = {
           statusCode: successCodes.SERVER_SUCCESS,
           message: {
@@ -220,7 +231,7 @@ router.get('/authenticated', (req, res) => {
           },
         };
         const resp = responseHandler(respo);
-  
+
         res.status(resp.statusCode).json(resp);
       } else {
         const respo = {
@@ -231,7 +242,7 @@ router.get('/authenticated', (req, res) => {
           },
         };
         const resp = responseHandler(respo);
-  
+
         res.status(resp.statusCode).json(resp);
       }
     }
