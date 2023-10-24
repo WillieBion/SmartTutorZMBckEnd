@@ -44,7 +44,7 @@ sequelize
 
 //Routes Auth
 const onbaording = require("./routes/onBoarding/onboarding");
-const login = require("./routes/Auth/login");
+const login = require("./routes/Auth/auth");
 
 // Routes SubjectsManagement
 const contentManagement = require("./routes/contentManagement/subjects");

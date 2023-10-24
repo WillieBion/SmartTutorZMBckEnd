@@ -41,6 +41,9 @@ export const errorMessages = {
   GEN_NOT_FOUND: "Not Found",
   USER_NOT_FOUND: "User Not Found",
   USER_CREDENTIALS_WRONG: "Wrong userName/Pin combination!",
+  USER_ALREADY_LOGGED_IN: "User is already logged in on another device",
+  USER_AUTHENTICATION_STATUS_FAILED: "User not authenticated"
+
 };
 
 //Resuable Success Messgae
@@ -60,6 +63,9 @@ export const successMessages = {
   FORGOT_PASSWORD_SUCCESS: "OTP SMS has been sent to your mobile device",
   UPDATED_SUBSCRIPTION_SUCCESS: "Subscription Successfully Updated",
   RETREIVE_USER_DETAILS_SUCCESS: "Successfully retrieved user details",
+  LOGOUT_SUCCESS: "Successfully logged out",
+  USER_AUTHENTICATION_STATUS: "User is authenticated."
+
 };
 
 // Base URL

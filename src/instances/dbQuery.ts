@@ -60,6 +60,11 @@ const GET_USER_ID_BY_TRANSID =
 const VERIFY_USERNAME_QRY =
   "SELECT user_name FROM user_details WHERE user_name = ?";
 
+//sessions
+const GET_SESSION_QRY = "SELECT * FROM sessions WHERE user_name = ?";
+const GET_SESSION_AUTH_STATUS_QRY = "SELECT * FROM sessions WHERE user_name = ? AND device_id = ?";
+const ADD_SESSION_QRY = "INSERT INTO sessions (user_name, device_id, is_valid) VALUES (?, ?, ?)";
+const DELETE_SESSION_QRY = "DELETE FROM sessions WHERE user_name = ? AND device_id = ?";
 // const insertQuery = (tableName: string ) => {
 // String ADD_SUBJECT_QRY = `INSERT INTO ${tableName} ()
 // }
@@ -91,4 +96,8 @@ export const db_query = {
   GET_SUBSCRIPTION_DETAILS_BY_QRY,
   GET_USER_DETAILS,
   GET_USER_ID_BY_TRANSID,
+  GET_SESSION_QRY,
+  ADD_SESSION_QRY,
+  DELETE_SESSION_QRY,
+  GET_SESSION_AUTH_STATUS_QRY
 };
