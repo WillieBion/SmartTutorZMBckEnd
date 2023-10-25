@@ -12,7 +12,7 @@ import {
 router.post("/chatbot", async (req, res) => {
   const messages = req.body;
 
-  console.log(properties.OPENAI_KEY);
+  // console.log(properties.OPENAI_KEY);
 
   const headers = {
     Authorization: `Bearer ${properties.OPENAI_KEY}`,

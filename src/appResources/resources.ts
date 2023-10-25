@@ -122,7 +122,7 @@ export const generateOTP = () => {
 };
 
 const randomDigitsOTP = generateOTP();
-console.log(randomDigitsOTP);
+// console.log(randomDigitsOTP);
 
 // const randomOTP = generateOTP();
 // console.log("Random OTP:", randomOTP);
