@@ -33,7 +33,7 @@ router.post("/login", (req, res) => {
 
       const respo = {
         statusCode: errorCodes.BAD_REQUEST,
-        message: errorMessages.USER_ALREADY_LOGGED_IN,
+        message: `User with phone number ${msisdn} is already logged in`  ,
       };
       const resp = responseHandler(respo);
 
