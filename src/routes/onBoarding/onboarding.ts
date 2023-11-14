@@ -122,6 +122,17 @@ router.post("/register", (req: any, res: any) => {
   //   })
 });
 
+/* Verify OTP on Registration */
+
+router.post("/register/verifyotp", (req, res) => {
+  const {otp} = req.body
+  try {
+    
+  } catch (error) {
+    
+  }
+})
+
 /* Change Password */
 
 router.post("/verifypassword/(:msisdn)", (req, res) => {
@@ -357,5 +368,45 @@ router.get("/getUserDetails/(:id)", (req, res) => {
     res.status(resp.statusCode).json(resp);
   }
 });
+
+
+router.get("/getUsers/unsubscribed", (req, res) => {
+  try {
+    database.query(db_query.GET_UNSUBSCRIBED_USERS, 1, (err, result) => {
+      if (err) {
+        const dbResp = {
+          statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+          message: err.code,
+        };
+        const resp = responseHandler(dbResp);
+        res.status(resp.statusCode).json(resp);
+      } else {
+        // const { password, ...unregistered_users } = result
+       const unsubscribed = result.map((item: any, index: any) => {
+          const {password, user_role, user_status, ...unsunscribed_users} = item;
+          return unsunscribed_users;
+        })
+        const respo = {
+          statusCode: successCodes.SERVER_SUCCESS,
+          message: {
+            description: "UnSubscribed users",
+            unsubcribed_users: unsubscribed,
+          }
+
+        }
+        const resp = responseHandler(respo);
+        res.status(resp.statusCode).json(resp);
+      }
+    })
+  } catch (error) {
+    const dbResp = {
+      statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+      message: errorMessages.INTERNAL_SERVER_ERROR,
+    };
+    const resp = responseHandler(dbResp);
+    res.status(resp.statusCode).json(resp);
+  }
+
+})
 
 module.exports = router;

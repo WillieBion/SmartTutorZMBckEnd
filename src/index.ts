@@ -19,7 +19,7 @@ import { validateToken } from "./appResources/jwtToken";
 app.use(express.json());
 //This is to ensure that all routes but for the registration and Login routes require a valid token
 app.use((req, res, next) => {
-  if (req.path === "/login" || req.path === "/register" || req.path === "/payment/smartTutor/callback" || req.path === "/forgotpassword/otp" || req.path === "/devicelogout") {
+  if (req.path === "/login" || req.path === "/register" || req.path === "/payment/smartTutor/callback" || req.path === "/forgotpassword/otp" || req.path === "/devicelogout" || req.path === "/getUsers/unsubscribed") {
     return next();
   }
 
