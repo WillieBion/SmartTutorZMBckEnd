@@ -14,6 +14,7 @@ require('dotenv').config({ path: path.join(__dirname, '../.env') });
 import { Sequelize } from "sequelize";
 import { generateOTP } from "./appResources/resources";
 import { validateToken } from "./appResources/jwtToken";
+import { getter } from "./instances/dbConfig";
 
 //
 app.use(express.json());
@@ -89,6 +90,7 @@ app.use("/payment", paymentManagement, subscriptionManagement);
 app.use("/chat", chat);
 
 // console.log("onbaording: " + db.user_details);
+getter("260972156059");
 sequelize
   .sync()
   .then(() => {

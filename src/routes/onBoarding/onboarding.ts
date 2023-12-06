@@ -9,128 +9,261 @@ import {
   successMessages,
   errorCodes,
   generateOTP,
+  VerifyToken,
+  generateOTPOnReg,
 } from "../../appResources/resources";
-import { database } from "../../instances/dbConfig";
+import { database, getter, setter } from "../../instances/dbConfig";
 import bcrypt from "bcrypt";
 import { properties } from "../../appResources/applicationProperties";
 import { db_query } from "../../instances/dbQuery";
 import axios from "axios";
 import { generateToken } from "../../appResources/jwtToken";
+// import { createClient } from "redis";
 // const db = require('../../models');
 
-router.post("/register", (req: any, res: any) => {
-  console.log("Here I am " + req.body);
-  const { msisdn, user_name, password, user_role, user_status } = req.body;
 
-  bcrypt
-    .hash(password, Number(properties.ENC_KEY))
-    .then((hash) => {
-      database.query(
-        "INSERT INTO user_details (msisdn, user_name, password, user_role, user_status) VALUES (?,?,?,?,?)",
-        [msisdn, user_name, hash, user_role, user_status],
-        (error, result) => {
-          // console.log(error?.code);
-          // if (error?.code === ""){
-          //   console.log("Error: " + error, "statusCode:" + error?.code);
-          //   const dbResp = {statusCode: 400, message: error?.message  }
-          //   const resp = responseHandler(dbResp);
-          //   res.status(resp.statusCode).json(resp.message);
-          // }else if (error?.code === '500'){
-          // console.log("Error: " + error, "statusCode:" + error.code);
-          // const dbResp = {statusCode: error!.errno, message: errorMessages.INTERNAL_SERVER_ERROR }
-          // const resp = responseHandler(dbResp);
-          // res.status(resp.statusCode).json(resp.message)
-          if (error) {
-            console.log("Error: " + error, "statusCode:" + error.code);
-            const dbResp = {
-              statusCode: errorCodes.INTERNAL_SERVER_ERROR,
-              message: errorMessages.INTERNAL_SERVER_ERROR,
-            };
-            const resp = responseHandler(dbResp);
-            res.status(resp.statusCode).json(resp);
-          } else {
-            console.log("We are a success, Welcome onboard");
-            const { password, ...userDetails } = req.body;
-            const tokenGenerator = { msisdn, user_name, password: hash };
+router.post("/register", async (req: any, res: any) => {
+  const { user_name } = req.body;
 
-            const userAccToken = generateToken(tokenGenerator);
+  // Store details in redis
+  /* custom setter method */
+  setter(user_name, req.body)
 
-            console.log(userDetails);
-            const dbResp = {
-              statusCode: successCodes.SERVER_SUCCESS,
-              message: {
-                description: successMessages.WELCOME_ABOARD,
-                user_details: userDetails,
-              },
-              jwtToken: userAccToken
-            };
-            const resp = responseHandler(dbResp);
-            res.status(resp.statusCode).json(resp);
-          }
-        }
-      );
-    })
-    .catch((err) => {
-      if (err) {
-        res.status(400).json({ error: err.message });
-      }
-    });
+  const { senderMessgae, otp } = generateOTPOnReg()
 
-  // database.query(
-  //   "INSERT INTO user_details (msisdn, user_name, user_role, user_status) VALUES (?,?,?,?)",
-  //   [msisdn, user_name, user_role, user_status],
-  //   (error, result) => {
-  //     // console.log(error?.code);
-  //     // if (error?.code === ""){
-  //     //   console.log("Error: " + error, "statusCode:" + error?.code);
-  //     //   const dbResp = {statusCode: 400, message: error?.message  }
-  //     //   const resp = responseHandler(dbResp);
-  //     //   res.status(resp.statusCode).json(resp.message);
-  //     // }else if (error?.code === '500'){
-  //     // console.log("Error: " + error, "statusCode:" + error.code);
-  //     // const dbResp = {statusCode: error!.errno, message: errorMessages.INTERNAL_SERVER_ERROR }
-  //     // const resp = responseHandler(dbResp);
-  //     // res.status(resp.statusCode).json(resp.message)
-  //     if (error) {
-  //       console.log("Error: " + error, "statusCode:" + error.code);
-  //       const dbResp = {
-  //         statusCode: error!.errno,
-  //         message: errorMessages.INTERNAL_SERVER_ERROR,
-  //       };
-  //       const resp = responseHandler(dbResp);
-  //       res.status(resp.statusCode).json(resp);
-  //     } else {
-  //       console.log("We are a success, Welcome onboard");
-  //       const dbResp = {
-  //         statusCode: successCodes.SERVER_SUCCESS,
-  //         message: {description: successMessages.WELCOME_ABOARD, payload: req.body},
-  //       };
-  //       const resp = responseHandler(dbResp);
-  //       res.status(resp.statusCode).json(resp);
-  //     }
-  //   }
-  // );
-  // return
-  //   db.user_details.create({msisdn, user_name, user_role, user_status}).then((details: any) => {
-  //  if (details){
-  //   res.status(200).json({statusCode: 200, message: {status: "success", payload: details}})
-  //  }
-  //   }).catch((err: any) => {
-  //      if (err){
-  //       res.status(500).json({statusCode:500, message: {status: "error", payload: err}});
-  //      }
-  //   })
-});
+  const respo = {
+    statusCode: successCodes.SERVER_SUCCESS,
+    message: {
+      description: `Details recieved for processing, an OTP ${otp} has been sent to your device.`,
+    }
+  }
+
+  const resp = responseHandler(respo)
+
+  res.status(resp.statusCode).json(resp)
+
+  database.query(db_query.CREATE_OTP_QRY, [user_name, otp], (err, result) => {
+    if (err) {
+      console.log("otp entry not successful " + err)
+    } else {
+      console.log("Successfully added otp entry");
+    }
+  })
+
+  //remains processing
+  /* Send OTP to Clients Device */
+  const { success, message } = await VerifyToken(user_name, senderMessgae);
+
+  if (success) {
+    console.log(message)
+  } else {
+    console.log(message)
+  }
+
+
+
+
+})
+
+// router.post("/register", (req: any, res: any) => {
+//   console.log("Here I am " + req.body);
+//   const { msisdn, user_name, password, user_role, user_status } = req.body;
+
+//   bcrypt
+//     .hash(password, Number(properties.ENC_KEY))
+//     .then((hash) => {
+//       database.query(
+//         "INSERT INTO user_details (msisdn, user_name, password, user_role, user_status) VALUES (?,?,?,?,?)",
+//         [msisdn, user_name, hash, user_role, user_status],
+//         async (error, result) => {
+//           // console.log(error?.code);
+//           // if (error?.code === ""){
+//           //   console.log("Error: " + error, "statusCode:" + error?.code);
+//           //   const dbResp = {statusCode: 400, message: error?.message  }
+//           //   const resp = responseHandler(dbResp);
+//           //   res.status(resp.statusCode).json(resp.message);
+//           // }else if (error?.code === '500'){
+//           // console.log("Error: " + error, "statusCode:" + error.code);
+//           // const dbResp = {statusCode: error!.errno, message: errorMessages.INTERNAL_SERVER_ERROR }
+//           // const resp = responseHandler(dbResp);
+//           // res.status(resp.statusCode).json(resp.message)
+//           if (error) {
+//             console.log("Error: " + error, "statusCode:" + error.code);
+//             const dbResp = {
+//               statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+//               message: errorMessages.INTERNAL_SERVER_ERROR,
+//             };
+//             const resp = responseHandler(dbResp);
+//             res.status(resp.statusCode).json(resp);
+//           } else {
+//             console.log("We are a success, Welcome onboard");
+//             const { password, ...userDetails } = req.body;
+//             const tokenGenerator = { msisdn, user_name, password: hash };
+
+//             const userAccToken = generateToken(tokenGenerator);
+
+//             console.log(userDetails);
+
+
+//             const bulkSMSResponse = await axios.get(
+//               `https://bulksms.zamtel.co.zm/api/v2.1/action/send/api_key/${properties.SMS_API}/contacts/${user_name}/senderId/${properties.SMS_SENDERID}/message/${senderMessgae}`
+//             );
+
+//             if (bulkSMSResponse.data.success === true) {
+//               // res.status(200).json(bulkSMSResponse.data);
+//               const dbResp = {
+//                 statusCode: successCodes.SERVER_SUCCESS,
+//                 message: {
+//                   description: successMessages.FORGOT_PASSWORD_SUCCESS,
+//                 },
+//               };
+//               const resp = responseHandler(dbResp);
+
+//               // res.status(successCodes.SERVER_SUCCESS).json(resp);
+//               console.log("OTP: " + otp, "\n " + "message: " + senderMessgae);
+//             }
+//             const dbResp = {
+//               statusCode: successCodes.SERVER_SUCCESS,
+//               message: {
+//                 description: successMessages.WELCOME_ABOARD,
+//                 user_details: userDetails,
+//               },
+//               jwtToken: userAccToken
+//             };
+//             const resp = responseHandler(dbResp);
+//             res.status(resp.statusCode).json(resp);
+//           }
+//         }
+//       );
+//     })
+//     .catch((err) => {
+//       if (err) {
+//         res.status(400).json({ error: err.message });
+//       }
+//     });
+
+//   // database.query(
+//   //   "INSERT INTO user_details (msisdn, user_name, user_role, user_status) VALUES (?,?,?,?)",
+//   //   [msisdn, user_name, user_role, user_status],
+//   //   (error, result) => {
+//   //     // console.log(error?.code);
+//   //     // if (error?.code === ""){
+//   //     //   console.log("Error: " + error, "statusCode:" + error?.code);
+//   //     //   const dbResp = {statusCode: 400, message: error?.message  }
+//   //     //   const resp = responseHandler(dbResp);
+//   //     //   res.status(resp.statusCode).json(resp.message);
+//   //     // }else if (error?.code === '500'){
+//   //     // console.log("Error: " + error, "statusCode:" + error.code);
+//   //     // const dbResp = {statusCode: error!.errno, message: errorMessages.INTERNAL_SERVER_ERROR }
+//   //     // const resp = responseHandler(dbResp);
+//   //     // res.status(resp.statusCode).json(resp.message)
+//   //     if (error) {
+//   //       console.log("Error: " + error, "statusCode:" + error.code);
+//   //       const dbResp = {
+//   //         statusCode: error!.errno,
+//   //         message: errorMessages.INTERNAL_SERVER_ERROR,
+//   //       };
+//   //       const resp = responseHandler(dbResp);
+//   //       res.status(resp.statusCode).json(resp);
+//   //     } else {
+//   //       console.log("We are a success, Welcome onboard");
+//   //       const dbResp = {
+//   //         statusCode: successCodes.SERVER_SUCCESS,
+//   //         message: {description: successMessages.WELCOME_ABOARD, payload: req.body},
+//   //       };
+//   //       const resp = responseHandler(dbResp);
+//   //       res.status(resp.statusCode).json(resp);
+//   //     }
+//   //   }
+//   // );
+//   // return
+//   //   db.user_details.create({msisdn, user_name, user_role, user_status}).then((details: any) => {
+//   //  if (details){
+//   //   res.status(200).json({statusCode: 200, message: {status: "success", payload: details}})
+//   //  }
+//   //   }).catch((err: any) => {
+//   //      if (err){
+//   //       res.status(500).json({statusCode:500, message: {status: "error", payload: err}});
+//   //      }
+//   //   })
+// });
 
 /* Verify OTP on Registration */
 
-router.post("/register/verifyotp", (req, res) => {
-  const {otp} = req.body
-  try {
-    
-  } catch (error) {
-    
-  }
+router.post("/register/verification", async (req, res) => {
+  const { otp, user_name } = req.body
+  const storedObject = getter(user_name);
+
+  console.log(storedObject);
+
+  // const password = await storedObject;
+
+  const {
+    msisdn,
+    user_role,
+    user_status,
+    device_id,
+    password
+  } = await storedObject
+// console.log(password)
+  // return
+    database.query(db_query.GET_OTP_QRY, [user_name, otp], (err, result) => {
+      console.log("OTP res" + result[0])
+      if (err) {
+        const dbResp = {
+          statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+          message: {
+            success: false,
+            description: err.code
+          },
+        };
+        const resp = responseHandler(dbResp);
+        res.status(resp.statusCode).json(resp);
+      } else {
+        if (otp === result[0].otp && result[0].isValid === 1){
+          bcrypt.hash(password, Number(properties.ENC_KEY)).then((hash) => {
+            database.query("INSERT INTO user_details (msisdn, user_name, password, user_role, user_status, device_id) VALUES (?, ? ,?, ?, ?, ?)", [msisdn, user_name, hash, user_role, user_status, device_id],
+            (error, result) => {
+              if (error){
+               const dbResp = {
+                 statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+                 message: {
+                   success: false,
+                   description: error.code
+                 },
+               };
+               const resp = responseHandler(dbResp);
+               res.status(resp.statusCode).json(resp);
+              }else {
+               const dbResp = {
+                 statusCode: successCodes.SERVER_SUCCESS,
+                 message: {
+                   success: true,
+                   description: successMessages.WELCOME_ABOARD,
+                   code: successMessages.VERIFICATION_CODE_SUCCESS,
+                  },
+               };
+               const resp = responseHandler(dbResp);
+               res.status(resp.statusCode).json(resp);
+              }
+            })
+         })
+        }else{
+          const dbResp = {
+            statusCode: errorCodes.NOT_FOUND_RESOURCE,
+            message: {
+              success: false,
+              description: "Invalid OTP"
+            },
+          };
+          const resp = responseHandler(dbResp);
+          res.status(resp.statusCode).json(resp); 
+        }
+       
+      
+      }
+    })
+ 
 })
 
 /* Change Password */
@@ -382,8 +515,8 @@ router.get("/getUsers/unsubscribed", (req, res) => {
         res.status(resp.statusCode).json(resp);
       } else {
         // const { password, ...unregistered_users } = result
-       const unsubscribed = result.map((item: any, index: any) => {
-          const {password, user_role, user_status, ...unsunscribed_users} = item;
+        const unsubscribed = result.map((item: any, index: any) => {
+          const { password, user_role, user_status, ...unsunscribed_users } = item;
           return unsunscribed_users;
         })
         const respo = {

@@ -72,6 +72,10 @@ const DELETE_SESSION_QRY = "DELETE FROM sessions WHERE user_name = ?";
 // String ADD_SUBJECT_QRY = `INSERT INTO ${tableName} ()
 // }
 
+//OTP
+const CREATE_OTP_QRY = "INSERT INTO otp (user, otp) VALUES (?, ?)";
+const GET_OTP_QRY = "SELECT * FROM otp WHERE user = ? AND otp = ?";
+
 export const db_query = {
   LOGIN_QRY,
   ADD_SUBJECT_QRY,
@@ -103,5 +107,7 @@ export const db_query = {
   ADD_SESSION_QRY,
   DELETE_SESSION_QRY,
   GET_SESSION_AUTH_STATUS_QRY,
-  GET_UNSUBSCRIBED_USERS
+  GET_UNSUBSCRIBED_USERS,
+  CREATE_OTP_QRY,
+  GET_OTP_QRY
 };
