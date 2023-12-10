@@ -205,65 +205,69 @@ router.post("/register/verification", async (req, res) => {
     device_id,
     password
   } = await storedObject
-// console.log(password)
+  // console.log(password)
   // return
-    database.query(db_query.GET_OTP_QRY, [user_name, otp], (err, result) => {
-      console.log("OTP res" + result[0])
-      if (err) {
+  database.query(db_query.GET_OTP_QRY, [user_name, otp], (err, result) => {
+    console.log("OTP res" + result[0])
+    if (err) {
+      const dbResp = {
+        statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+        message: {
+          success: false,
+          description: err.code
+        },
+      };
+      const resp = responseHandler(dbResp);
+      res.status(resp.statusCode).json(resp);
+    } else {
+      if (otp === result[0].otp && result[0].isValid === 1) {
+        bcrypt.hash(password, Number(properties.ENC_KEY)).then((hash) => {
+          database.query("INSERT INTO user_details (msisdn, user_name, password, user_role, user_status, device_id) VALUES (?, ? ,?, ?, ?, ?)", [msisdn, user_name, hash, user_role, user_status, device_id],
+            (error, result) => {
+              const tokenGenerator = { msisdn, user_name, hash, user_role, user_status, device_id }
+              if (error) {
+                const dbResp = {
+                  statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+                  message: {
+                    success: false,
+                    description: error.code
+                  },
+                };
+                const resp = responseHandler(dbResp);
+                res.status(resp.statusCode).json(resp);
+              } else {
+                const userAccToken = generateToken(tokenGenerator);
+
+                const dbResp = {
+                  statusCode: successCodes.SERVER_SUCCESS,
+                  message: {
+                    success: true,
+                    description: successMessages.WELCOME_ABOARD,
+                    code: successMessages.VERIFICATION_CODE_SUCCESS,
+                    jwtToken: userAccToken
+                  },
+                };
+                const resp = responseHandler(dbResp);
+                res.status(resp.statusCode).json(resp);
+              }
+            })
+        })
+      } else {
         const dbResp = {
-          statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+          statusCode: errorCodes.NOT_FOUND_RESOURCE,
           message: {
             success: false,
-            description: err.code
+            description: "Invalid OTP"
           },
         };
         const resp = responseHandler(dbResp);
         res.status(resp.statusCode).json(resp);
-      } else {
-        if (otp === result[0].otp && result[0].isValid === 1){
-          bcrypt.hash(password, Number(properties.ENC_KEY)).then((hash) => {
-            database.query("INSERT INTO user_details (msisdn, user_name, password, user_role, user_status, device_id) VALUES (?, ? ,?, ?, ?, ?)", [msisdn, user_name, hash, user_role, user_status, device_id],
-            (error, result) => {
-              if (error){
-               const dbResp = {
-                 statusCode: errorCodes.INTERNAL_SERVER_ERROR,
-                 message: {
-                   success: false,
-                   description: error.code
-                 },
-               };
-               const resp = responseHandler(dbResp);
-               res.status(resp.statusCode).json(resp);
-              }else {
-               const dbResp = {
-                 statusCode: successCodes.SERVER_SUCCESS,
-                 message: {
-                   success: true,
-                   description: successMessages.WELCOME_ABOARD,
-                   code: successMessages.VERIFICATION_CODE_SUCCESS,
-                  },
-               };
-               const resp = responseHandler(dbResp);
-               res.status(resp.statusCode).json(resp);
-              }
-            })
-         })
-        }else{
-          const dbResp = {
-            statusCode: errorCodes.NOT_FOUND_RESOURCE,
-            message: {
-              success: false,
-              description: "Invalid OTP"
-            },
-          };
-          const resp = responseHandler(dbResp);
-          res.status(resp.statusCode).json(resp); 
-        }
-       
-      
       }
-    })
- 
+
+
+    }
+  })
+
 })
 
 /* Change Password */

@@ -2,9 +2,9 @@ import { sign, verify } from "jsonwebtoken";
 import { GenerateTokenI } from "./types/userDetailTypes";
 
 export const generateToken = (userobject: GenerateTokenI) => {
-  const { msisdn, user_name, password } = userobject;
+  const { msisdn, user_name, hash, user_role, user_status, device_id } = userobject;
   const token = sign(
-    { msisdn, user_name, password },
+    { msisdn, user_name, hash, user_role, user_status, device_id },
     process.env.JSON_SECRET_KEY!
   );
   return token;

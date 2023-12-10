@@ -20,7 +20,7 @@ import { getter } from "./instances/dbConfig";
 app.use(express.json());
 //This is to ensure that all routes but for the registration and Login routes require a valid token
 app.use((req, res, next) => {
-  if (req.path === "/login" || req.path === "/register" || req.path === "/payment/smartTutor/callback" || req.path === "/forgotpassword/otp" || req.path === "/devicelogout" || req.path === "/getUsers/unsubscribed") {
+  if (req.path === "/login" || req.path === "/register" || req.path === "/payment/smartTutor/callback" || req.path === "/forgotpassword/otp" || req.path === "/devicelogout" || req.path === "/getUsers/unsubscribed" || req.path === "/register/verification") {
     return next();
   }
 
