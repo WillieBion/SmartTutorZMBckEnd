@@ -224,7 +224,7 @@ router.post("/register/verification", async (req, res) => {
         bcrypt.hash(password, Number(properties.ENC_KEY)).then((hash) => {
           database.query("INSERT INTO user_details (msisdn, user_name, password, user_role, user_status, device_id) VALUES (?, ? ,?, ?, ?, ?)", [msisdn, user_name, hash, user_role, user_status, device_id],
             (error, result) => {
-              const tokenGenerator = { msisdn, user_name, hash, user_role, user_status, device_id }
+              const tokenGenerator = { msisdn, user_name, password: hash, user_role, user_status, device_id }
               if (error) {
                 const dbResp = {
                   statusCode: errorCodes.INTERNAL_SERVER_ERROR,

@@ -33,7 +33,7 @@ router.post("/login", (req, res) => {
 
       const respo = {
         statusCode: errorCodes.BAD_REQUEST,
-        message: `User with phone number ${msisdn} is already logged in`  ,
+        message: `User with phone number ${msisdn} is already logged in`,
       };
       const resp = responseHandler(respo);
 
@@ -54,7 +54,9 @@ router.post("/login", (req, res) => {
           bcrypt.compare(pin, result[0].password, (error, response) => {
             if (response) {
               const { password, ...user } = result[0];
-              const { user_role, user_status, ...tokenGenerator } = result[0]
+              const { msisdn, user_name } = result[0]
+              // tokenGenerator.device_id = device_id
+              const tokenGenerator = { msisdn, user_name, password, device_id }
 
               const userAccToken = generateToken(tokenGenerator);
               // const is_valid = true;
@@ -183,13 +185,13 @@ router.post('/logout', (req, res) => {
     } else {
       console.log("result: :" + result[0])
       // if (typeof result[0] !== 'undefined') {
-        const respo = {
-          statusCode: successCodes.SERVER_SUCCESS,
-          message: successMessages.LOGOUT_SUCCESS
-        };
-        const resp = responseHandler(respo);
+      const respo = {
+        statusCode: successCodes.SERVER_SUCCESS,
+        message: successMessages.LOGOUT_SUCCESS
+      };
+      const resp = responseHandler(respo);
 
-        res.status(resp.statusCode).json(resp);
+      res.status(resp.statusCode).json(resp);
       // } else {
       //   const respo = {
       //     statusCode: errorCodes.BAD_REQUEST,
@@ -220,13 +222,13 @@ router.post('/devicelogout', (req, res) => {
     } else {
       console.log("result: :" + result[0])
       // if (typeof result[0] !== 'undefined') {
-        const respo = {
-          statusCode: successCodes.SERVER_SUCCESS,
-          message: successMessages.LOGOUT_SUCCESS
-        };
-        const resp = responseHandler(respo);
+      const respo = {
+        statusCode: successCodes.SERVER_SUCCESS,
+        message: successMessages.LOGOUT_SUCCESS
+      };
+      const resp = responseHandler(respo);
 
-        res.status(resp.statusCode).json(resp);
+      res.status(resp.statusCode).json(resp);
       // } else {
       //   const respo = {
       //     statusCode: errorCodes.BAD_REQUEST,
