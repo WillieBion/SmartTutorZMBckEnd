@@ -22,7 +22,7 @@ exports.database.connect((err, conn) => {
         console.log("Database connection edu_app_prod");
     }
 });
-const db = "edu_app_prod";
+const db = "smart_tutor_prod";
 const username = "root";
 const password = "Willie#2045@1998";
 exports.sequelize = new sequelize_1.Sequelize(db, username, password, {
