@@ -43,6 +43,7 @@ const ADD_SUBSCRIPTION_QRY =
 const GET_SUBSCRIPTION_DETAILS_QRY = "SELECT * FROM subscription_details";
 const GET_SUBSCRIPTION_DETAILS_BY_QRY =
   "SELECT * FROM subscription_details WHERE id = ?";
+  const GET_SUBSCRIPTION_STATUS_QRY = "SELECT * FROM subscriptions WHERE user_id = ?";
 
 /* Update Password */
 const UPDATE_PASSWORD_QRY =
@@ -109,5 +110,6 @@ export const db_query = {
   GET_SESSION_AUTH_STATUS_QRY,
   GET_UNSUBSCRIBED_USERS,
   CREATE_OTP_QRY,
-  GET_OTP_QRY
+  GET_OTP_QRY,
+  GET_SUBSCRIPTION_STATUS_QRY 
 };
