@@ -117,8 +117,9 @@ router.post("/login", (req, res) => {
           bcrypt.compare(pin, result[0].password, (error, response) => {
             if (response) {
               const { password, ...user } = result[0];
-              const { user_role, user_status, ...tokenGenerator } = result[0]
-
+              const { msisdn, user_name } = result[0]
+              // tokenGenerator.device_id = device_id
+              const tokenGenerator = { msisdn, user_name, password, device_id }
               const userAccToken = generateToken(tokenGenerator);
               const is_valid = true;
               //Write the session to sessions table
