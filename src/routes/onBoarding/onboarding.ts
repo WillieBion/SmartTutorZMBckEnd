@@ -236,6 +236,27 @@ router.post("/register/verification", async (req, res) => {
                 const resp = responseHandler(dbResp);
                 res.status(resp.statusCode).json(resp);
               } else {
+                const is_valid = true;
+
+                //Lets add a session once inserted to the DB.
+                //Write the session to sessions table
+                database.query(db_query.ADD_SESSION_QRY, [msisdn, device_id, is_valid], (err, addSession) => {
+                  if (err) {
+                    console.log(err)
+                  } else {
+                    // const respo = {
+                    //   statusCode: successCodes.SERVER_SUCCESS,
+                    //   message: {
+                    //     description: successMessages.LOGIN_SUCCESS,
+                    //     user_details: user,
+                    //   },
+                    //   jwtToken: userAccToken
+                    // };
+                    // const resp = responseHandler(respo);
+                    // res.status(resp.statusCode).json(resp);
+                    console.log("Session created from Registration")
+                  }
+                })
                 const userAccToken = generateToken(tokenGenerator);
 
                 const dbResp = {
