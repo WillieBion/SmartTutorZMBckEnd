@@ -1,7 +1,8 @@
 import express from "express";
 const app = express();
 // import * as db from './models';
-const cors = require("cors");
+// const cors = require("cors");
+import cors from 'cors';
 
 //Set Path
 const path = require('path');
