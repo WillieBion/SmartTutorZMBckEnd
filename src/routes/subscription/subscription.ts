@@ -117,6 +117,40 @@ router.get("/getSubscriptionDetails", (req, res) => {
   });
 });
 
+// Get Subscription status
+router.get("/getSubscription/status/(:username)", (req, res) => {
+  const { username } = req.params;
+
+  database.query(db_query.GET_USER_DETAILS, [username], (error, result) => {
+    const isValid = result[0]?.user_status === 2 ? true : false;
+    console.log(isValid + " is_valid")
+    if (error) {
+      const dbResp = {
+        success: false,
+        statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+        message: errorMessages.INTERNAL_SERVER_ERROR,
+      };
+      const resp = responseHandler(dbResp);
+      res.status(resp.statusCode).json(resp);
+    } else {
+      const { user_status } = result[0]
+
+      const dbResp = {
+        success: true,
+        statusCode: successCodes.SERVER_SUCCESS,
+        message: {
+          isSubscribed: isValid,
+        }
+      };
+      const resp = responseHandler(dbResp);
+      res.status(resp.statusCode).json(resp);
+
+
+
+    }
+  });
+});
+
 router.post("/smartTutor/callback", (req, res) => {
   const {
     amount,

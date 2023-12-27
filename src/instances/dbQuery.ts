@@ -1,5 +1,8 @@
 const GET_USER_DETAILS = "SELECT * FROM user_details WHERE user_name = ?";
 const LOGIN_QRY = "SELECT * FROM user_details WHERE msisdn = ?;";
+/* User status */
+const GET_UNSUBSCRIBED_USERS = "SELECT * from user_details WHERE user_status = ?"
+// const GET_USER_SUBSCRIPTION_STATUS = "SELECT * ";
 // const ADD_SUBJECT_QRY = "INSERT INTO
 const ADD_SUBJECT_QRY =
   "INSERT INTO subject (name, pictureURL, lesson_title, lesson_description, exam_title, exam_description) VALUES (?,?, ?, ?,?, ?)";
@@ -40,6 +43,7 @@ const ADD_SUBSCRIPTION_QRY =
 const GET_SUBSCRIPTION_DETAILS_QRY = "SELECT * FROM subscription_details";
 const GET_SUBSCRIPTION_DETAILS_BY_QRY =
   "SELECT * FROM subscription_details WHERE id = ?";
+  const GET_SUBSCRIPTION_STATUS_QRY = "SELECT * FROM subscriptions WHERE user_id = ?";
 
 /* Update Password */
 const UPDATE_PASSWORD_QRY =
@@ -60,9 +64,18 @@ const GET_USER_ID_BY_TRANSID =
 const VERIFY_USERNAME_QRY =
   "SELECT user_name FROM user_details WHERE user_name = ?";
 
+//sessions
+const GET_SESSION_QRY = "SELECT * FROM sessions WHERE user_name = ?";
+const GET_SESSION_AUTH_STATUS_QRY = "SELECT * FROM sessions WHERE user_name = ? AND device_id = ?";
+const ADD_SESSION_QRY = "INSERT INTO sessions (user_name, device_id, is_valid) VALUES (?, ?, ?)";
+const DELETE_SESSION_QRY = "DELETE FROM sessions WHERE user_name = ?";
 // const insertQuery = (tableName: string ) => {
 // String ADD_SUBJECT_QRY = `INSERT INTO ${tableName} ()
 // }
+
+//OTP
+const CREATE_OTP_QRY = "INSERT INTO otp (user, otp) VALUES (?, ?)";
+const GET_OTP_QRY = "SELECT * FROM otp WHERE user = ? AND otp = ?";
 
 export const db_query = {
   LOGIN_QRY,
@@ -91,4 +104,12 @@ export const db_query = {
   GET_SUBSCRIPTION_DETAILS_BY_QRY,
   GET_USER_DETAILS,
   GET_USER_ID_BY_TRANSID,
+  GET_SESSION_QRY,
+  ADD_SESSION_QRY,
+  DELETE_SESSION_QRY,
+  GET_SESSION_AUTH_STATUS_QRY,
+  GET_UNSUBSCRIBED_USERS,
+  CREATE_OTP_QRY,
+  GET_OTP_QRY,
+  GET_SUBSCRIPTION_STATUS_QRY 
 };

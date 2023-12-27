@@ -2,6 +2,9 @@ import express from "express";
 import { ResponseHandler } from "./appResourceTypes";
 export const app = express();
 export const router = express.Router();
+import { properties } from "./applicationProperties";
+import axios from "axios";
+
 
 // Resuable Functions
 export const responseHandler = (response: ResponseHandler) => {
@@ -41,6 +44,9 @@ export const errorMessages = {
   GEN_NOT_FOUND: "Not Found",
   USER_NOT_FOUND: "User Not Found",
   USER_CREDENTIALS_WRONG: "Wrong userName/Pin combination!",
+  USER_ALREADY_LOGGED_IN: "User is already logged in on another device",
+  USER_AUTHENTICATION_STATUS_FAILED: "User not authenticated"
+
 };
 
 //Resuable Success Messgae
@@ -60,6 +66,10 @@ export const successMessages = {
   FORGOT_PASSWORD_SUCCESS: "OTP SMS has been sent to your mobile device",
   UPDATED_SUBSCRIPTION_SUCCESS: "Subscription Successfully Updated",
   RETREIVE_USER_DETAILS_SUCCESS: "Successfully retrieved user details",
+  LOGOUT_SUCCESS: "Successfully logged out",
+  USER_AUTHENTICATION_STATUS: "User is authenticated.",
+  VERIFICATION_CODE_SUCCESS: "Code successfully verified",
+
 };
 
 // Base URL
@@ -106,7 +116,8 @@ export const generateOTP = () => {
     const randomIndex = Math.floor(Math.random() * charset.length);
     otp += charset.charAt(randomIndex);
   }
-  const message = `Your OTP is ${otp}`;
+  // const message = `Your OTP is ${otp}`;
+  const message = `Your one-time password is ${otp}. Change this password after you login to your SmartTutor ZM account. Contact support if you didn't initiate this request.`
 
   //   // return otp;
   const urlEncodedMessage = encodeURIComponent(message);
@@ -114,8 +125,25 @@ export const generateOTP = () => {
   return { otp, senderMessgae: urlEncodedMessage };
 };
 
-const randomDigitsOTP = generateOTP();
-console.log(randomDigitsOTP);
+export const generateOTPOnReg = () => {
+  const length = 4;
+  const charset = "0123456789"; // Only digits 0-9
+  let otp = "";
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    otp += charset.charAt(randomIndex);
+  }
+  // const message = `Your OTP is ${otp}`;
+  const message = `Your one-time password is ${otp}. Change this password after you login to your SmartTutor ZM account. Contact support if you didn't initiate this request.`
+
+  //   // return otp;
+  const urlEncodedMessage = encodeURIComponent(message);
+
+  return { otp, senderMessgae: urlEncodedMessage };
+};
+// const randomDigitsOTP = generateOTP();
+// console.log(randomDigitsOTP);
 
 // const randomOTP = generateOTP();
 // console.log("Random OTP:", randomOTP);
@@ -124,6 +152,34 @@ console.log(randomDigitsOTP);
 export const paymentMessages = {
   NARRATION_MSG: "SmartTutor Payment",
 };
+
+//Code Verification
+
+export const VerifyToken = async (user_name: string, senderMessgae: any) => {
+
+  //Make axios request to bulk sms
+
+
+  const bulkSMSResponse = await axios.get(
+    `https://bulksms.zamtel.co.zm/api/v2.1/action/send/api_key/${properties.SMS_API}/contacts/${user_name}/senderId/${properties.SMS_SENDERID}/message/${senderMessgae}`
+  );
+  if (bulkSMSResponse.data.success === true) {
+    console.log(bulkSMSResponse.data.success + "Bulk SMS sent successfully");
+    return {
+      success: true,
+      message: "Bulk SMS sent successfully"
+    }
+  } else {
+    console.log("Bulk SMS not sent successfully");
+    return {
+      success: false,
+      message: "Bulk SMS not sent successfully"
+    }
+
+  }
+
+
+}
 
 // module.exports = {
 //     app,

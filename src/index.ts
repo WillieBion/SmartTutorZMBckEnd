@@ -1,10 +1,11 @@
 import express from "express";
 const app = express();
 // import * as db from './models';
-const cors = require("cors");
+// const cors = require("cors");
+import cors from 'cors';
 
 //Set Path
-const path = require('path'); 
+const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
 // console.log(path);
@@ -14,20 +15,22 @@ require('dotenv').config({ path: path.join(__dirname, '../.env') });
 import { Sequelize } from "sequelize";
 import { generateOTP } from "./appResources/resources";
 import { validateToken } from "./appResources/jwtToken";
+import { getter } from "./instances/dbConfig";
 
 //
 app.use(express.json());
+app.use(cors());
 
 //This is to ensure that all routes but for the registration and Login routes require a valid token
 app.use((req, res, next) => {
-  if (req.path === "/login" || req.path === "/register" || req.path === "/payment/smartTutor/callback" || req.path === "/forgotpassword/otp") {
+  if (req.path === "/login" || req.path === "/register" || req.path === "/payment/smartTutor/callback" || req.path === "/forgotpassword/otp" || req.path === "/devicelogout" || req.path === "/getUsers/unsubscribed" || req.path === "/register/verification") {
     return next();
   }
 
   validateToken(req, res, next);
 });
 
-const PORT = 1432;
+const PORT = 1431;
 
 const sequelize = new Sequelize("edu_app", "root", "Willie#2045@1998", {
   host: "localhost",
@@ -45,7 +48,7 @@ sequelize
 
 //Routes Auth
 const onbaording = require("./routes/onBoarding/onboarding");
-const login = require("./routes/Auth/login");
+const login = require("./routes/Auth/auth");
 
 // Routes SubjectsManagement
 const contentManagement = require("./routes/contentManagement/subjects");
@@ -63,8 +66,6 @@ const subscriptionManagement = require("./routes/subscription/subscription");
 
 // chat
 const chat = require("./routes/chat/stChatbot");
-
-
 // const generateTransId = () => {
 //   const prefix = "0000";
 //   const randomer = Math.floor(Math.random() * 100000000)
@@ -77,7 +78,6 @@ const chat = require("./routes/chat/stChatbot");
 //use routes
 // const value = generateOTP();
 // console.log(value);
-app.use(cors());
 // app.use(express.json())
 app.use("/", onbaording);
 app.use("/", login);
@@ -91,6 +91,7 @@ app.use(
 app.use("/payment", paymentManagement, subscriptionManagement);
 app.use("/chat", chat);
 // console.log("onbaording: " + db.user_details);
+getter("260972156059");
 sequelize
   .sync()
   .then(() => {

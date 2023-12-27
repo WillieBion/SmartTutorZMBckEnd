@@ -12,7 +12,7 @@ import {
 router.post("/chatbot", async (req, res) => {
   const messages = req.body;
 
-  console.log(properties.OPENAI_KEY);
+  // console.log(properties.OPENAI_KEY);
 
   const headers = {
     Authorization: `Bearer ${properties.OPENAI_KEY}`,
@@ -30,8 +30,8 @@ router.post("/chatbot", async (req, res) => {
     ...userMessages
   ]
 
-  // impliment async await
-  // also verify logic
+  // impliment async await || Implemented as requested by CTO
+  // also verify logic || Verified as requested by CTO
   try {
     const { data, status } = await axios
       .post(
@@ -61,7 +61,14 @@ router.post("/chatbot", async (req, res) => {
 
   } catch (error) {
     console.log(error)
-    res.status(500).json(error);
+    // res.status(500).json(error);
+    const dbResp = {
+        statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+        message: errorMessages.INTERNAL_SERVER_ERROR,
+      };
+      const resp = responseHandler(dbResp);
+
+      res.status(resp.statusCode).json(resp);
   }
 
 

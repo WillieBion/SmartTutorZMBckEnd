@@ -8,6 +8,9 @@ export interface LoginI {
 
 export interface GenerateTokenI {
   msisdn: string
-  user_name: string
-  password: string
+  user_name: string;
+  password: string;
+  // user_role: number;
+  // user_status: number;
+  device_id: string
 }
