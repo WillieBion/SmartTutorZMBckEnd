@@ -30,7 +30,7 @@ app.use((req, res, next) => {
   validateToken(req, res, next);
 });
 
-const PORT = 1431;
+const PORT = 1430;
 
 const sequelize = new Sequelize("edu_app", "root", "Willie#2045@1998", {
   host: "localhost",
