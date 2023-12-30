@@ -135,7 +135,7 @@ export const generateOTPOnReg = () => {
     otp += charset.charAt(randomIndex);
   }
   // const message = `Your OTP is ${otp}`;
-  const message = `Your one-time password is ${otp}. Change this password after you login to your SmartTutor ZM account. Contact support if you didn't initiate this request.`
+  const message = `Your registration one-time password is ${otp}. Contact support if you didn't initiate this request.`
 
   //   // return otp;
   const urlEncodedMessage = encodeURIComponent(message);

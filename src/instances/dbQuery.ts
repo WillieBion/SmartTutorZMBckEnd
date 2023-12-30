@@ -1,3 +1,4 @@
+const CREATE_USER_QUERY = "INSERT INTO user_details (msisdn, user_name, password, user_role, user_status, device_id) VALUES (?, ? ,?, ?, ?, ?)";
 const GET_USER_DETAILS = "SELECT * FROM user_details WHERE user_name = ?";
 const LOGIN_QRY = "SELECT * FROM user_details WHERE msisdn = ?;";
 /* User status */
@@ -111,5 +112,6 @@ export const db_query = {
   GET_UNSUBSCRIBED_USERS,
   CREATE_OTP_QRY,
   GET_OTP_QRY,
-  GET_SUBSCRIPTION_STATUS_QRY 
+  GET_SUBSCRIPTION_STATUS_QRY,
+  CREATE_USER_QUERY 
 };

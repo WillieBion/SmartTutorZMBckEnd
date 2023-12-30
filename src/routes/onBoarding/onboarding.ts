@@ -567,4 +567,50 @@ router.get("/getUsers/unsubscribed", (req, res) => {
 
 })
 
+
+//Dashboard onboaring API's
+
+router.post('/dashboard/register', (req, res) => {
+  //Get details from 
+  const device_id = "web";
+  const { msisdn,
+    user_role,
+    user_name,
+    user_status,
+    // device_id,
+    password } = req.body
+  bcrypt.hash(password, Number(properties.ENC_KEY)).then((hash) => {
+    database.query(db_query.CREATE_USER_QUERY, [msisdn, user_name, hash, user_role, user_status, device_id], (err, result) => {
+      if (err) {
+        const dbResp = {
+          statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+          message: {
+            success: false,
+            description: err.code
+          },
+        };
+        const resp = responseHandler(dbResp);
+        res.status(resp.statusCode).json(resp);
+      } else {
+        const tokenGenerator = { msisdn, user_name, password: hash, user_role, user_status, device_id }
+        const userAccToken = generateToken(tokenGenerator);
+        const { password, ...user_details } = tokenGenerator;
+
+        const dbResp = {
+          statusCode: successCodes.SERVER_SUCCESS,
+          message: {
+            success: true,
+            description: successMessages.WELCOME_ABOARD,
+            // code: successMessages.VERIFICATION_CODE_SUCCESS,
+            user_details,
+            jwtToken: userAccToken
+          },
+        };
+        const resp = responseHandler(dbResp);
+        res.status(resp.statusCode).json(resp);
+      }
+    })
+  })
+
+})
 module.exports = router;
