@@ -23,7 +23,7 @@ app.use(cors());
 
 //This is to ensure that all routes but for the registration and Login routes require a valid token
 app.use((req, res, next) => {
-  if (req.path === "/login" || req.path === "/register" || req.path === "/payment/smartTutor/callback" || req.path === "/forgotpassword/otp" || req.path === "/devicelogout" || req.path === "/getUsers/unsubscribed" || req.path === "/register/verification") {
+  if (req.path === "/login" || req.path === "/register" || req.path === "/payment/smartTutor/callback" || req.path === "/forgotpassword/otp" || req.path === "/devicelogout" || req.path === "/getUsers/unsubscribed" || req.path === "/register/verification" || req.path === "/dashboard/login" || req.path === "/dashboard/register") {
     return next();
   }
 
