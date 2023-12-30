@@ -570,6 +570,7 @@ router.get("/getUsers/unsubscribed", (req, res) => {
 
 //Dashboard onboaring API's
 
+/* Registration */
 router.post('/dashboard/register', (req, res) => {
   //Get details from 
   const device_id = "web";
@@ -613,4 +614,6 @@ router.post('/dashboard/register', (req, res) => {
   })
 
 })
+
+
 module.exports = router;
