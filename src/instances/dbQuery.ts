@@ -26,6 +26,7 @@ const ADD_LESSON_QRY =
   "INSERT INTO lessons (title, duration,media_type, media_value, subject_id) VALUES (?, ?, ?, ?, ?)";
 const GET_LESSON_BY_SUBJECT = "SELECT * FROM lessons WHERE subject_id = ?";
 
+
 /* Topic */
 
 const ADD_TOPIC_QRY =
@@ -44,7 +45,7 @@ const ADD_SUBSCRIPTION_QRY =
 const GET_SUBSCRIPTION_DETAILS_QRY = "SELECT * FROM subscription_details";
 const GET_SUBSCRIPTION_DETAILS_BY_QRY =
   "SELECT * FROM subscription_details WHERE id = ?";
-  const GET_SUBSCRIPTION_STATUS_QRY = "SELECT * FROM subscriptions WHERE user_id = ?";
+const GET_SUBSCRIPTION_STATUS_QRY = "SELECT * FROM subscriptions WHERE user_id = ?";
 
 /* Update Password */
 const UPDATE_PASSWORD_QRY =
@@ -77,6 +78,13 @@ const DELETE_SESSION_QRY = "DELETE FROM sessions WHERE user_name = ?";
 //OTP
 const CREATE_OTP_QRY = "INSERT INTO otp (user, otp) VALUES (?, ?)";
 const GET_OTP_QRY = "SELECT * FROM otp WHERE user = ? AND otp = ?";
+
+
+/* Query function*/
+
+const deleteQuery = (table: string, column: string) => {
+  return `DELETE FROM ${table} WHERE ${column} = ?`
+}
 
 export const db_query = {
   LOGIN_QRY,
@@ -113,5 +121,6 @@ export const db_query = {
   CREATE_OTP_QRY,
   GET_OTP_QRY,
   GET_SUBSCRIPTION_STATUS_QRY,
-  CREATE_USER_QUERY 
+  CREATE_USER_QUERY,
+  deleteQuery
 };

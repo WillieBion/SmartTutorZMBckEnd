@@ -265,4 +265,31 @@ router.get("/getExamBySubject/(:id)", (req, res) => {
   }
 });
 
+router.get('/delete/examByID/(:id)', (req, res) => {
+  const { id } = req.params
+  console.log("id is " + id)
+  let removeQuery = db_query.deleteQuery("exam", "id")
+  console.log(removeQuery)
+  database.query(removeQuery, id, (err, result) => {
+    if (err) {
+      const dbResp = {
+        statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+        message: errorMessages.INTERNAL_SERVER_ERROR,
+      };
+      const resp = responseHandler(dbResp);
+      res.status(resp.statusCode).json(resp);
+    } else {
+      const dbResp = {
+        statusCode: successCodes.SERVER_SUCCESS,
+        message: {
+          success: true,
+          description: "Successfully Deleted"
+        },
+      };
+      const resp = responseHandler(dbResp);
+      res.status(successCodes.SERVER_SUCCESS).json(resp);
+    }
+  })
+})
+
 module.exports = router;
