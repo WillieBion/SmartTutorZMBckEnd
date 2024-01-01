@@ -86,6 +86,10 @@ const deleteQuery = (table: string, column: string) => {
   return `DELETE FROM ${table} WHERE ${column} = ?`
 }
 
+const updateQuery = (table: string, column: string,  condition: string) => {
+  return `UPDATE ${table} SET ${column} = ? WHERE ${condition} = ?`
+}
+
 export const db_query = {
   LOGIN_QRY,
   ADD_SUBJECT_QRY,
@@ -122,5 +126,6 @@ export const db_query = {
   GET_OTP_QRY,
   GET_SUBSCRIPTION_STATUS_QRY,
   CREATE_USER_QUERY,
-  deleteQuery
+  deleteQuery,
+  updateQuery
 };

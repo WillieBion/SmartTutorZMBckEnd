@@ -134,15 +134,73 @@ router.get('/delete/subjectByID/(:id)', (req, res) => {
       const resp = responseHandler(dbResp);
       res.status(resp.statusCode).json(resp);
     } else {
+      if (result.affectedRows > 0) {
+        const dbResp = {
+          statusCode: successCodes.SERVER_SUCCESS,
+          message: {
+            success: true,
+            description: "Successfully Deleted"
+          },
+        };
+        const resp = responseHandler(dbResp);
+        res.status(successCodes.SERVER_SUCCESS).json(resp);
+      }else {
+        const dbResp = {
+          statusCode: errorCodes.NOT_FOUND_RESOURCE,
+          message: {
+            success: false,
+            description: "Record not found"
+          },
+        };
+        const resp = responseHandler(dbResp);
+        res.status(successCodes.SERVER_SUCCESS).json(resp);
+      }
+    }
+  })
+})
+
+
+router.put('/update/subjectByID', (req, res) => {
+  const { column, updateValue, condition, conditionValue } = req.body
+  let updateQuery = db_query.updateQuery("subject", column, condition,)
+  console.log(updateQuery);
+  console.log(JSON.stringify(req.body, null, 2) + "Boody")
+
+
+  database.query(updateQuery, [updateValue, conditionValue], (err, result) => {
+    if (err) {
+      console.log(err)
       const dbResp = {
-        statusCode: successCodes.SERVER_SUCCESS,
-        message: {
-          success: true,
-          description: "Successfully Deleted"
-        },
+        statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+        message: err.code,
       };
       const resp = responseHandler(dbResp);
-      res.status(successCodes.SERVER_SUCCESS).json(resp);
+      res.status(resp.statusCode).json(resp);
+    } else {
+      console.log(result.affectedRows);
+      if (result.affectedRows > 0) {
+        const dbResp = {
+          statusCode: successCodes.SERVER_SUCCESS,
+          message: {
+            success: true,
+            description: "Successfully updated record"
+          },
+        };
+        const resp = responseHandler(dbResp);
+        res.status(successCodes.SERVER_SUCCESS).json(resp);
+        return
+      }else {
+        const dbResp = {
+          statusCode: errorCodes.NOT_FOUND_RESOURCE,
+          message: {
+            success: false,
+            description: "Record not found"
+          },
+        };
+        const resp = responseHandler(dbResp);
+        res.status(successCodes.SERVER_SUCCESS).json(resp);
+      }
+   
     }
   })
 })
