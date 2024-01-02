@@ -308,7 +308,7 @@ router.get('/delete/examByID/(:id)', (req, res) => {
 
 router.put('/update/examByID', (req, res) => {
   const { column, updateValue, condition, conditionValue } = req.body
-  let updateQuery = db_query.updateQuery("exam", column, condition,)
+  let updateQuery = db_query.updateQuery("exam", column, condition, false)
   console.log(updateQuery);
   console.log(JSON.stringify(req.body, null, 2) + "Boody")
 
@@ -347,6 +347,51 @@ router.put('/update/examByID', (req, res) => {
         res.status(successCodes.SERVER_SUCCESS).json(resp);
       }
    
+    }
+  })
+})
+
+router.put('/updateAll/examByID', (req, res) => {
+  const { title, duration, media_type, media_value, subject_id, condition, conditionValue } = req.body
+  let updateQuery = db_query.updateQuery("exam", "?", condition, true)
+  console.log(updateQuery);
+  console.log(JSON.stringify(req.body, null, 2) + "Boody")
+
+
+  database.query(updateQuery, [{ title, duration, media_type, media_value, subject_id }, conditionValue], (err, result) => {
+    if (err) {
+      console.log(err)
+      const dbResp = {
+        statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+        message: err.code,
+      };
+      const resp = responseHandler(dbResp);
+      res.status(resp.statusCode).json(resp);
+    } else {
+      console.log(result.affectedRows);
+      if (result.affectedRows > 0) {
+        const dbResp = {
+          statusCode: successCodes.SERVER_SUCCESS,
+          message: {
+            success: true,
+            description: "Successfully updated record"
+          },
+        };
+        const resp = responseHandler(dbResp);
+        res.status(successCodes.SERVER_SUCCESS).json(resp);
+        return
+      } else {
+        const dbResp = {
+          statusCode: errorCodes.NOT_FOUND_RESOURCE,
+          message: {
+            success: false,
+            description: "Record not found"
+          },
+        };
+        const resp = responseHandler(dbResp);
+        res.status(successCodes.SERVER_SUCCESS).json(resp);
+      }
+
     }
   })
 })

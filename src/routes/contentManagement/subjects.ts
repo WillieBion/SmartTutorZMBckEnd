@@ -144,7 +144,7 @@ router.get('/delete/subjectByID/(:id)', (req, res) => {
         };
         const resp = responseHandler(dbResp);
         res.status(successCodes.SERVER_SUCCESS).json(resp);
-      }else {
+      } else {
         const dbResp = {
           statusCode: errorCodes.NOT_FOUND_RESOURCE,
           message: {
@@ -162,7 +162,7 @@ router.get('/delete/subjectByID/(:id)', (req, res) => {
 
 router.put('/update/subjectByID', (req, res) => {
   const { column, updateValue, condition, conditionValue } = req.body
-  let updateQuery = db_query.updateQuery("subject", column, condition,)
+  let updateQuery = db_query.updateQuery("subject", column, condition, false)
   console.log(updateQuery);
   console.log(JSON.stringify(req.body, null, 2) + "Boody")
 
@@ -189,7 +189,7 @@ router.put('/update/subjectByID', (req, res) => {
         const resp = responseHandler(dbResp);
         res.status(successCodes.SERVER_SUCCESS).json(resp);
         return
-      }else {
+      } else {
         const dbResp = {
           statusCode: errorCodes.NOT_FOUND_RESOURCE,
           message: {
@@ -200,7 +200,52 @@ router.put('/update/subjectByID', (req, res) => {
         const resp = responseHandler(dbResp);
         res.status(successCodes.SERVER_SUCCESS).json(resp);
       }
-   
+
+    }
+  })
+})
+
+router.put('/updateAll/subjectByID', (req, res) => {
+  const { condition, name, pictureURL, lesson_title, lesson_description, exam_title, exam_description, conditionValue } = req.body
+  let updateQuery = db_query.updateQuery("subject", "?", condition, true)
+  console.log(updateQuery);
+  console.log(JSON.stringify(req.body, null, 2) + "Boody")
+
+
+  database.query(updateQuery, [{ name, pictureURL, lesson_title, lesson_description, exam_title, exam_description }, conditionValue], (err, result) => {
+    if (err) {
+      console.log(err)
+      const dbResp = {
+        statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+        message: err.code,
+      };
+      const resp = responseHandler(dbResp);
+      res.status(resp.statusCode).json(resp);
+    } else {
+      console.log(result.affectedRows);
+      if (result.affectedRows > 0) {
+        const dbResp = {
+          statusCode: successCodes.SERVER_SUCCESS,
+          message: {
+            success: true,
+            description: "Successfully updated record"
+          },
+        };
+        const resp = responseHandler(dbResp);
+        res.status(successCodes.SERVER_SUCCESS).json(resp);
+        return
+      } else {
+        const dbResp = {
+          statusCode: errorCodes.NOT_FOUND_RESOURCE,
+          message: {
+            success: false,
+            description: "Record not found"
+          },
+        };
+        const resp = responseHandler(dbResp);
+        res.status(successCodes.SERVER_SUCCESS).json(resp);
+      }
+
     }
   })
 })

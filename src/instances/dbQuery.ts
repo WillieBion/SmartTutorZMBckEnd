@@ -86,8 +86,14 @@ const deleteQuery = (table: string, column: string) => {
   return `DELETE FROM ${table} WHERE ${column} = ?`
 }
 
-const updateQuery = (table: string, column: string,  condition: string) => {
-  return `UPDATE ${table} SET ${column} = ? WHERE ${condition} = ?`
+const updateQuery = (table: string, column: string,  condition: string, isUpdateAll: boolean | undefined | null) => {
+  if (!isUpdateAll){
+    return `UPDATE ${table} SET ${column} = ? WHERE ${condition} = ?`
+
+  }else {
+    return `UPDATE ${table} SET ${column} WHERE ${condition} = ?`
+
+  }
 }
 
 export const db_query = {
