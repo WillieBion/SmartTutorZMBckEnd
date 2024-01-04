@@ -13,7 +13,7 @@ require('dotenv').config({ path: path.join(__dirname, '../.env') });
 // const router = express.Router();
 // const Sequelize = require("sequelize");
 import { Sequelize } from "sequelize";
-import { generateOTP } from "./appResources/resources";
+import { generateOTP, generateReferralCode } from "./appResources/resources";
 import { validateToken } from "./appResources/jwtToken";
 import { getter } from "./instances/dbConfig";
 
@@ -79,6 +79,8 @@ const chat = require("./routes/chat/stChatbot");
 // const value = generateOTP();
 // console.log(value);
 // app.use(express.json())
+// const value = generateReferralCode()
+// console.log(value)
 app.use("/", onbaording);
 app.use("/", login);
 app.use(

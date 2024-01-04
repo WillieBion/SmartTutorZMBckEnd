@@ -1,5 +1,4 @@
 // const express = require('express');
-import { error } from "console";
 import {
   app,
   responseHandler,
@@ -11,6 +10,7 @@ import {
   generateOTP,
   VerifyToken,
   generateOTPOnReg,
+  generateReferralCode,
 } from "../../appResources/resources";
 import { database, getter, setter } from "../../instances/dbConfig";
 import bcrypt from "bcrypt";
@@ -609,6 +609,68 @@ router.post('/dashboard/register', (req, res) => {
         };
         const resp = responseHandler(dbResp);
         res.status(resp.statusCode).json(resp);
+      }
+    })
+  })
+
+})
+
+router.post('/onboarding/teacher', async (req, res) => {
+  const {
+    user_name,
+    password
+  } = req.body
+  //CONSTANTS
+  const device_id = "web";
+  const user_role = 4;
+  const user_status = 3;
+  const msisdn = user_name;
+
+
+
+  bcrypt.hash(password, Number(properties.ENC_KEY)).then((hash) => {
+    database.query(db_query.CREATE_USER_QUERY, [msisdn, user_name, hash, user_role, user_status, device_id], (err, result) => {
+      if (err) {
+        console.log("Failed to create user: \n" + err.code);
+
+      } else {
+        console.log("User created successfully")
+
+        // const tokenGenerator = { msisdn, user_name, password: hash, user_role, user_status, device_id }
+        // const userAccToken = generateToken(tokenGenerator);
+        // const { password, ...user_details } = tokenGenerator;
+
+        //Generate Referral_code and assign it to teacher.
+        const { code } = generateReferralCode();
+        console.log("CODE " + code + "User_name" + user_name)
+        database.query(db_query.CREATE_REFERRAL_CODE, [code, user_name], (err, result) => {
+          if (err) {
+            console.log("Error " + err)
+            const dbResp = {
+              statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+              message: {
+                success: false,
+                description: err.code
+              },
+            };
+            const resp = responseHandler(dbResp);
+            res.status(resp.statusCode).json(resp);
+          } else {
+
+            const dbResp = {
+              statusCode: successCodes.SERVER_SUCCESS,
+              message: {
+                success: true,
+                description: successMessages.TEACHER_ONBOARDING,
+                refferal_code: code
+              },
+            };
+            const resp = responseHandler(dbResp);
+            res.status(resp.statusCode).json(resp);
+          }
+        })
+
+
       }
     })
   })

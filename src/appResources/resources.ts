@@ -69,6 +69,7 @@ export const successMessages = {
   LOGOUT_SUCCESS: "Successfully logged out",
   USER_AUTHENTICATION_STATUS: "User is authenticated.",
   VERIFICATION_CODE_SUCCESS: "Code successfully verified",
+  TEACHER_ONBOARDING: "You have successfully created a teacher"
 
 };
 
@@ -141,6 +142,24 @@ export const generateOTPOnReg = () => {
   const urlEncodedMessage = encodeURIComponent(message);
 
   return { otp, senderMessgae: urlEncodedMessage };
+};
+
+export const generateReferralCode = () => {
+  const length = 5;
+  const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; // Alpha Numeric A-Z - 0-9
+  let code = "";
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    code += charset.charAt(randomIndex);
+  }
+  // const message = `Your OTP is ${otp}`;
+  // const message = `Your one-time password is ${otp}. Change this password after you login to your SmartTutor ZM account. Contact support if you didn't initiate this request.`
+
+  //   // return otp;
+  // const urlEncodedMessage = encodeURIComponent(message);
+
+  return { code };
 };
 // const randomDigitsOTP = generateOTP();
 // console.log(randomDigitsOTP);

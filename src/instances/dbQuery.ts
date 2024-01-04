@@ -79,6 +79,8 @@ const DELETE_SESSION_QRY = "DELETE FROM sessions WHERE user_name = ?";
 const CREATE_OTP_QRY = "INSERT INTO otp (user, otp) VALUES (?, ?)";
 const GET_OTP_QRY = "SELECT * FROM otp WHERE user = ? AND otp = ?";
 
+//Referral_Code
+const CREATE_REFERRAL_CODE = "INSERT INTO referral_codes (code, userID) VALUES (?, ?)";
 
 /* Query function*/
 
@@ -86,11 +88,11 @@ const deleteQuery = (table: string, column: string) => {
   return `DELETE FROM ${table} WHERE ${column} = ?`
 }
 
-const updateQuery = (table: string, column: string,  condition: string, isUpdateAll: boolean | undefined | null) => {
-  if (!isUpdateAll){
+const updateQuery = (table: string, column: string, condition: string, isUpdateAll: boolean | undefined | null) => {
+  if (!isUpdateAll) {
     return `UPDATE ${table} SET ${column} = ? WHERE ${condition} = ?`
 
-  }else {
+  } else {
     return `UPDATE ${table} SET ${column} WHERE ${condition} = ?`
 
   }
@@ -132,6 +134,7 @@ export const db_query = {
   GET_OTP_QRY,
   GET_SUBSCRIPTION_STATUS_QRY,
   CREATE_USER_QUERY,
+  CREATE_REFERRAL_CODE,
   deleteQuery,
   updateQuery
 };
