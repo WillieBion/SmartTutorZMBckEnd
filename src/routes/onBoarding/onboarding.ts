@@ -662,7 +662,7 @@ router.post('/onboarding/teacher', async (req, res) => {
               message: {
                 success: true,
                 description: successMessages.TEACHER_ONBOARDING,
-                refferal_code: code
+                referral_code: code
               },
             };
             const resp = responseHandler(dbResp);
