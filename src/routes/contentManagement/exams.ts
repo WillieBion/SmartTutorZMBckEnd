@@ -23,6 +23,7 @@ router.post("/addExamPaper", (req, res) => {
       [title, duration, media_type, media_value, year, subject],
       (error, results) => {
         if (error) {
+          console.log(error + "error")
           const dbResp = {
             statusCode: errorCodes.INTERNAL_SERVER_ERROR,
             message: error.code,
@@ -289,7 +290,7 @@ router.get('/delete/examByID/(:id)', (req, res) => {
         };
         const resp = responseHandler(dbResp);
         res.status(successCodes.SERVER_SUCCESS).json(resp);
-      }else {
+      } else {
         const dbResp = {
           statusCode: errorCodes.NOT_FOUND_RESOURCE,
           message: {
@@ -300,7 +301,7 @@ router.get('/delete/examByID/(:id)', (req, res) => {
         const resp = responseHandler(dbResp);
         res.status(successCodes.SERVER_SUCCESS).json(resp);
       }
-    
+
     }
   })
 })
@@ -335,7 +336,7 @@ router.put('/update/examByID', (req, res) => {
         const resp = responseHandler(dbResp);
         res.status(successCodes.SERVER_SUCCESS).json(resp);
         return
-      }else {
+      } else {
         const dbResp = {
           statusCode: errorCodes.NOT_FOUND_RESOURCE,
           message: {
@@ -346,7 +347,7 @@ router.put('/update/examByID', (req, res) => {
         const resp = responseHandler(dbResp);
         res.status(successCodes.SERVER_SUCCESS).json(resp);
       }
-   
+
     }
   })
 })

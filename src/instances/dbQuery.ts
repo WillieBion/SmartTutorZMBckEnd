@@ -11,7 +11,7 @@ const GET_SUBJECT_QRY = "SELECT * FROM subject WHERE id = ?";
 const GET_ALL_SUBJECT_QRY = "SELECT * FROM subject";
 /*Exams */
 const ADD_EXAM_QRY =
-  "INSERT INTO exam (title, duration, media_type, media_value, year, subject) VALUES (?, ?, ?, ?, ?, ?)";
+  "INSERT INTO exam (title, duration, media_type, media_value, year, subject_id) VALUES (?, ?, ?, ?, ?, ?)";
 const GET_EXAM_QRY = "SELECT * FROM exam WHERE id = ?";
 const GET_ALL_EXAM_QRY = "SELECT * FROM exam";
 const GET_EXAM_BY_SUBJECT_QRY = "SELECT * FROM exam WHERE subject_id = ?";
