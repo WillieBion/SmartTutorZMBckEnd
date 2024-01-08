@@ -66,6 +66,9 @@ const subscriptionManagement = require("./routes/subscription/subscription");
 
 // chat
 const chat = require("./routes/chat/stChatbot");
+
+//Admin
+const adminStats = require("./routes/stats/adminstats");
 // const generateTransId = () => {
 //   const prefix = "0000";
 //   const randomer = Math.floor(Math.random() * 100000000)
@@ -92,6 +95,7 @@ app.use(
 );
 app.use("/payment", paymentManagement, subscriptionManagement);
 app.use("/chat", chat);
+app.use("/stats", adminStats)
 
 // console.log("onbaording: " + db.user_details);
 getter("260972156059");

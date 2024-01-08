@@ -17,6 +17,8 @@ import {
 router.post("/addExamPaper", (req, res) => {
   const { title, duration, media_type, media_value, year, subject } = req.body;
 
+  console.log(req.body)
+
   try {
     database.query(
       db_query.ADD_EXAM_QRY,

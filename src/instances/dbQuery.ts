@@ -82,6 +82,25 @@ const GET_OTP_QRY = "SELECT * FROM otp WHERE user = ? AND otp = ?";
 //Referral_Code
 const CREATE_REFERRAL_CODE = "INSERT INTO referral_codes (code, userID) VALUES (?, ?)";
 
+
+//ADMIN STATS
+const ADMIN_GET_USER_DATA = `SELECT
+ud.msisdn,
+ud.user_status,
+sd.price AS subscription_amount,
+rc.code AS referral_code,
+sub.created_at AS date_subscribed
+FROM
+user_details ud
+JOIN
+subscriptions sub ON ud.msisdn = sub.user_id
+JOIN
+subscription_details sd ON sub.subscription = sd.id
+LEFT JOIN
+referral_codes rc ON ud.msisdn  = rc.userID 
+WHERE
+sub.is_valid = 1`;
+
 /* Query function*/
 
 const deleteQuery = (table: string, column: string) => {
@@ -135,6 +154,7 @@ export const db_query = {
   GET_SUBSCRIPTION_STATUS_QRY,
   CREATE_USER_QUERY,
   CREATE_REFERRAL_CODE,
+  ADMIN_GET_USER_DATA,
   deleteQuery,
   updateQuery
 };
