@@ -144,6 +144,24 @@ export const generateOTPOnReg = () => {
   return { otp, senderMessgae: urlEncodedMessage };
 };
 
+export const teacherDefaultPass = (referral_code: string) => {
+  const length = 4;
+  const charset = "0123456789"; // Only digits 0-9
+  let otp = "";
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    otp += charset.charAt(randomIndex);
+  }
+  // const message = `Your OTP is ${otp}`;
+  const message = `Your default login password is ${otp} and your referral ID is ${referral_code}.`
+
+  //   // return otp;
+  const urlEncodedMessage = encodeURIComponent(message);
+
+  return { otp, senderMessgae: urlEncodedMessage };
+};
+
 export const generateReferralCode = () => {
   const length = 5;
   const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; // Alpha Numeric A-Z - 0-9
