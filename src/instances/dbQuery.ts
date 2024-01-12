@@ -101,6 +101,50 @@ referral_codes rc ON ud.msisdn  = rc.userID
 WHERE
 sub.is_valid = 1`;
 
+const ADMIN_GET__WEEKLY_APP_SUBSCRIBERS = `SELECT
+
+DATE(created_at) AS registration_date,
+
+COUNT(id) AS subscriptions,
+
+SUM(COUNT(id)) OVER (ORDER BY DATE(created_at) ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS cumulative_subs
+
+FROM
+
+subscriptions s
+
+WHERE
+
+created_at >= CURRENT_DATE - INTERVAL '7' DAY
+
+GROUP BY DATE(created_at)
+
+ORDER BY registration_date
+
+`;
+
+const ADMIN_GET_WEEKLY_APP_USERS = `SELECT
+
+DATE(created_at) AS registration_date,
+
+COUNT(id) AS new_users,
+
+SUM(COUNT(id)) OVER (ORDER BY DATE(created_at) ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS cumulative_users
+
+FROM
+
+user_details
+
+WHERE
+
+created_at >= CURRENT_DATE
+
+GROUP BY DATE(created_at)
+
+ORDER BY registration_date
+
+`;
+
 /* Query function*/
 
 const deleteQuery = (table: string, column: string) => {
@@ -155,6 +199,8 @@ export const db_query = {
   CREATE_USER_QUERY,
   CREATE_REFERRAL_CODE,
   ADMIN_GET_USER_DATA,
+  ADMIN_GET__WEEKLY_APP_SUBSCRIBERS,
+  ADMIN_GET_WEEKLY_APP_USERS,
   deleteQuery,
   updateQuery
 };
