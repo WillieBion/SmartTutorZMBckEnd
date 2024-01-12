@@ -41,7 +41,7 @@ const ADD_RECEIPT_QRY =
 
 /* Subscription */
 const ADD_SUBSCRIPTION_QRY =
-  "INSERT INTO subscriptions (user_id, trans_id, subscription) VALUES (?, ?, ?)";
+  "INSERT INTO subscriptions (user_id, trans_id, referral_id, subscription) VALUES (?, ?, ?, ?)";
 const GET_SUBSCRIPTION_DETAILS_QRY = "SELECT * FROM subscription_details";
 const GET_SUBSCRIPTION_DETAILS_BY_QRY =
   "SELECT * FROM subscription_details WHERE id = ?";

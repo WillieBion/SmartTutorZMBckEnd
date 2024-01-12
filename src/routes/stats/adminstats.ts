@@ -59,7 +59,7 @@ router.get('/getweeklysubscriptions', (req, res) => {
 
 /* Get new users adding up to a week */
 
-router.get('/getweeklysubscriptions', (req, res) => {
+router.get('/getweeklyappusers', (req, res) => {
   database.query(db_query.ADMIN_GET_WEEKLY_APP_USERS, (err, data) => {
     if (err) {
       console.log(err + "error")
