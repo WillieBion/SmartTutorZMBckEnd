@@ -145,7 +145,7 @@ export const generateOTPOnReg = () => {
 };
 
 export const teacherDefaultPass = (referral_code: string) => {
-  const length = 4;
+  const length = 6;
   const charset = "0123456789"; // Only digits 0-9
   let otp = "";
 
