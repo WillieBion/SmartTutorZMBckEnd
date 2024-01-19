@@ -22,17 +22,17 @@ app.use(express.json());
 app.use(cors());
 
 //This is to ensure that all routes but for the registration and Login routes require a valid token
-app.use((req, res, next) => {
+/* app.use((req, res, next) => {
   if (req.path === "/login" || req.path === "/register" || req.path === "/payment/smartTutor/callback" || req.path === "/forgotpassword/otp" || req.path === "/devicelogout" || req.path === "/getUsers/unsubscribed" || req.path === "/register/verification") {
     return next();
   }
 
   validateToken(req, res, next);
-});
+}); */
 
 const PORT = 1431;
 
-const sequelize = new Sequelize("edu_app", "root", "Willie#2045@1998", {
+const sequelize = new Sequelize("smart_tutor_prod", "root", "Willie#2045@1998", {
   host: "localhost",
   dialect: "mysql",
 });
@@ -66,6 +66,10 @@ const subscriptionManagement = require("./routes/subscription/subscription");
 
 // chat
 const chat = require("./routes/chat/stChatbot");
+
+// app statistics
+const stats = require("./routes/stats");
+
 // const generateTransId = () => {
 //   const prefix = "0000";
 //   const randomer = Math.floor(Math.random() * 100000000)
@@ -90,6 +94,8 @@ app.use(
 );
 app.use("/payment", paymentManagement, subscriptionManagement);
 app.use("/chat", chat);
+app.use("/stats", stats);
+
 // console.log("onbaording: " + db.user_details);
 getter("260972156059");
 sequelize

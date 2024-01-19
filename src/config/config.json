@@ -2,21 +2,21 @@
   "development": {
     "username": "root",
     "password": "Willie#2045@1998",
-    "database": "edu_app",
+    "database": "smart_tutor_prod",
     "host": "localhost",
     "dialect": "mysql"
   },
   "test": {
     "username": "root",
     "password": "Willie#2045@1998",
-    "database": "edu_app",
+    "database": "smart_tutor_prod",
     "host": "localhost",
     "dialect": "mysql"
   },
   "production": {
     "username": "root",
     "password": "Willie#2045@1998",
-    "database": "edu_app",
+    "database": "smart_tutor_prod",
     "host": "localhost",
     "dialect": "mysql"
   }

@@ -77,6 +77,10 @@ const DELETE_SESSION_QRY = "DELETE FROM sessions WHERE user_name = ?";
 const CREATE_OTP_QRY = "INSERT INTO otp (user, otp) VALUES (?, ?)";
 const GET_OTP_QRY = "SELECT * FROM otp WHERE user = ? AND otp = ?";
 
+// For statistical data
+const GET_ALL_USERS = "SELECT * from user_details;"
+const GET_ALL_TEACHERS = "SELECT * from "
+
 export const db_query = {
   LOGIN_QRY,
   ADD_SUBJECT_QRY,
@@ -111,5 +115,6 @@ export const db_query = {
   GET_UNSUBSCRIBED_USERS,
   CREATE_OTP_QRY,
   GET_OTP_QRY,
-  GET_SUBSCRIPTION_STATUS_QRY 
+  GET_SUBSCRIPTION_STATUS_QRY,
+  GET_ALL_USERS 
 };

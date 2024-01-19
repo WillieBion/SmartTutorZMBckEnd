@@ -6,39 +6,32 @@ import { createClient } from "redis";
 import { SetterI } from "../appResources/types/redis";
 
 //create client
-const client = createClient()
+const client = createClient();
 
-//Add connection 
-const redis = client.connect()
+//Add connection
+const redis = client.connect();
 
-client.on('connect', () => {
+client.on("connect", () => {
+  console.log("Connection established with Redis");
+});
 
-  console.log("Connection established with Redis")
-
-})
-
-client.on('err', () => {
-
-  console.log("Connection error")
-
-})
+client.on("err", () => {
+  console.log("Connection error");
+});
 
 //create a setter for redis
 
 export const setter = async (id: string, obj: SetterI) => {
-  await client.hSet(id, obj)
-}
+  await client.hSet(id, obj);
+};
 
 export const getter = async (id: string) => {
   const storedObject = await client.hGetAll(id);
 
-  console.log(JSON.stringify(storedObject, null, 2))
+  console.log(JSON.stringify(storedObject, null, 2));
 
-  return storedObject as any
-}
-
-
-
+  return storedObject as any;
+};
 
 export const database = mysql.createConnection({
   user: properties.DB_USER,
@@ -51,12 +44,13 @@ database.connect((err, conn) => {
   if (err) {
     console.log("Database connection error" + err);
   } else {
-    console.log("Database connection edu_app_prod");
+    console.log("Database connection smart_tutor_prod");
   }
-})
-const db = "edu_app_prod";
+});
+const db = "smart_tutor_prod";
 const username = "root";
 const password = "Willie#2045@1998";
+
 
 export const sequelize = new Sequelize(db, username, password, {
   host: "localhost",

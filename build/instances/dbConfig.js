@@ -19,12 +19,12 @@ exports.database.connect((err, conn) => {
         console.log("Database connection error" + err);
     }
     else {
-        console.log("Database connection edu_app_prod");
+        console.log("Database connection smart_tutor_prod");
     }
 });
 const db = "smart_tutor_prod";
 const username = "root";
-const password = "Willie#2045@1998";
+const password = "root";
 exports.sequelize = new sequelize_1.Sequelize(db, username, password, {
     host: "localhost",
     dialect: "mysql",
