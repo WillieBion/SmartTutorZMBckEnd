@@ -145,6 +145,70 @@ ORDER BY registration_date
 
 `;
 
+
+//daily number of new users, subscription and referrals
+
+
+
+const GET_DAILY_NUMBER_NEW_USERS_SUBS_RC = `SELECT
+    COUNT(DISTINCT CASE WHEN ud.user_role = 1 AND DATE(ud.created_at) = CURRENT_DATE THEN ud.msisdn END) AS new_users_count,
+    COUNT(DISTINCT CASE WHEN DATE(sub.created_at) = CURRENT_DATE THEN sub.id END) AS subscriptions_count,
+    COUNT(DISTINCT CASE WHEN DATE(rc.created_at) = CURRENT_DATE THEN sub.id END) AS referrals_used_count
+FROM
+    user_details ud
+LEFT JOIN
+    subscriptions sub ON ud.msisdn = sub.user_id
+LEFT JOIN
+    referral_codes rc ON ud.msisdn = rc.userID 
+WHERE
+    sub.is_valid = 1`;
+
+const GET_TEACHER_RC_SUBS = `SELECT
+teachers.msisdn AS teacher_msisdn,
+rc.code AS referral_code,
+COUNT(DISTINCT CASE WHEN sub.subscription = '1' THEN sub.id END) AS monthly_subscription_count,
+COUNT(DISTINCT CASE WHEN sub.subscription = '2' THEN sub.id END) AS termly_subscription_count
+FROM
+user_details teachers
+JOIN
+referral_codes rc ON teachers.msisdn = rc.userID
+LEFT JOIN
+subscriptions sub ON rc.code = sub.referral_id AND sub.is_valid = 1
+WHERE
+teachers.user_role  = 4  
+GROUP BY
+teachers.msisdn, rc.code`;
+
+const GET_ADMIN_RC_SUBS = `SELECT
+sales_manager.msisdn AS sales_msisdn,
+rc.code AS referral_code,
+COUNT(DISTINCT CASE WHEN sub.subscription = '1' THEN sub.id END) AS monthly_subscription_count,
+COUNT(DISTINCT CASE WHEN sub.subscription = '2' THEN sub.id END) AS termly_subscription_count
+FROM
+user_details sales_manager
+JOIN
+referral_codes rc ON sales_manager.msisdn = rc.userID
+LEFT JOIN
+subscriptions sub ON rc.code = sub.referral_id AND sub.is_valid = 1
+WHERE
+sales_manager.user_role  = 3 
+GROUP BY
+sales_manager.msisdn, rc.code`;
+
+const GET_COUNT_USERS_ACTIVE_INACTIVE_TEACHERS = `SELECT
+COUNT(DISTINCT msisdn) AS total_users,
+COUNT(DISTINCT CASE WHEN user_role = 1 AND user_status = 2 THEN msisdn END) AS subscribed_users,
+COUNT(DISTINCT CASE WHEN user_role = 1 AND user_status != 2 THEN msisdn END) AS unsubscribed_users,
+COUNT(DISTINCT CASE WHEN user_role = 4 THEN msisdn END) AS number_of_teachers,
+COUNT(DISTINCT CASE WHEN user_role = 3 THEN msisdn END) AS number_of_sales_managers,
+SUM(CASE WHEN user_role = 1 AND user_status = 2 THEN sd.price  ELSE 0 END) AS subscription_total
+FROM
+user_details ud
+LEFT JOIN
+subscriptions sub ON ud.msisdn = sub.user_id AND sub.is_valid = 1
+LEFT JOIN
+subscription_details sd ON sub.subscription = sd.id;`
+
 /* Query function*/
 
 const deleteQuery = (table: string, column: string) => {
@@ -201,6 +265,10 @@ export const db_query = {
   ADMIN_GET_USER_DATA,
   ADMIN_GET__WEEKLY_APP_SUBSCRIBERS,
   ADMIN_GET_WEEKLY_APP_USERS,
+  GET_DAILY_NUMBER_NEW_USERS_SUBS_RC,
+  GET_TEACHER_RC_SUBS,
+  GET_ADMIN_RC_SUBS,
+  GET_COUNT_USERS_ACTIVE_INACTIVE_TEACHERS,
   deleteQuery,
   updateQuery
 };
