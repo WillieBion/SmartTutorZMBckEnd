@@ -221,7 +221,23 @@ user_details ud
 LEFT JOIN
 subscriptions sub ON ud.msisdn = sub.user_id AND sub.is_valid = 1
 LEFT JOIN
-subscription_details sd ON sub.subscription = sd.id;`
+subscription_details sd ON sub.subscription = sd.id`
+
+const GET_SUBS_RC_TEACHER = `SELECT
+teachers.msisdn AS teacher_msisdn,
+rc.code AS teacher_referral_code,
+COUNT(DISTINCT CASE WHEN sub.subscription = 'monthly' THEN sub.id END) AS monthly_subscription,
+COUNT(DISTINCT CASE WHEN sub.subscription = 'termly' THEN sub.id END) AS termly_subscription
+FROM
+user_details teachers
+JOIN
+referral_codes rc ON teachers.msisdn = rc.userID
+LEFT JOIN
+subscriptions sub ON rc.code = sub.referral_id AND sub.is_valid = 1
+WHERE
+teachers.user_role = 4 
+GROUP BY
+teachers.msisdn, rc.code`;
 
 /* Query function*/
 
@@ -284,6 +300,7 @@ export const db_query = {
   GET_TEACHER_RC_SUBS,
   GET_ADMIN_RC_SUBS,
   GET_COUNT_USERS_ACTIVE_INACTIVE_TEACHERS,
+  GET_SUBS_RC_TEACHER,
   deleteQuery,
   updateQuery
 };
