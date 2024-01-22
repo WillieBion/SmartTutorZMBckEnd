@@ -226,8 +226,8 @@ subscription_details sd ON sub.subscription = sd.id`
 const GET_SUBS_RC_TEACHER = `SELECT
 teachers.msisdn AS teacher_msisdn,
 rc.code AS teacher_referral_code,
-COUNT(DISTINCT CASE WHEN sub.subscription = 'monthly' THEN sub.id END) AS monthly_subscription,
-COUNT(DISTINCT CASE WHEN sub.subscription = 'termly' THEN sub.id END) AS termly_subscription
+COUNT(DISTINCT CASE WHEN sub.subscription = '1' THEN sub.id END) AS monthly_subscription,
+COUNT(DISTINCT CASE WHEN sub.subscription = '2' THEN sub.id END) AS termly_subscription
 FROM
 user_details teachers
 JOIN

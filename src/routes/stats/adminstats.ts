@@ -174,7 +174,7 @@ router.get('/getadmintotaluserssubscribersteacherssales', (req, res) => {
 })
 
 router.get('/getteacherdatamsisdnreferralmonthlytermly', (req, res) => {
-  database.query(db_query.GET_SUBS_RC_TEACHER, (err, data) => {
+  database.query(db_query.GET_SUBS_RC_TEACHER , (err, data) => {
     if (err) {
       console.log(err + "error")
       const dbResp = {
