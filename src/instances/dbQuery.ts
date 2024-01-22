@@ -101,6 +101,20 @@ referral_codes rc ON ud.msisdn  = rc.userID
 WHERE
 sub.is_valid = 1`;
 
+const ADMIN_GET_USER_DATA_WITH_PRICE = `SELECT
+sub.user_id AS student_msisdn,
+sub.referral_id AS referral_code,
+sd.price AS subscription_price,
+sub.created_at AS date_subscribed
+FROM
+subscriptions sub
+JOIN
+subscription_details sd ON sub.subscription = sd.id
+WHERE
+sub.is_valid = 1
+GROUP BY
+sub.user_id, sub.referral_id, sd.price, sub.created_at`;
+
 const ADMIN_GET__WEEKLY_APP_SUBSCRIBERS = `SELECT
 
 DATE(created_at) AS registration_date,
@@ -263,6 +277,7 @@ export const db_query = {
   CREATE_USER_QUERY,
   CREATE_REFERRAL_CODE,
   ADMIN_GET_USER_DATA,
+  ADMIN_GET_USER_DATA_WITH_PRICE,
   ADMIN_GET__WEEKLY_APP_SUBSCRIBERS,
   ADMIN_GET_WEEKLY_APP_USERS,
   GET_DAILY_NUMBER_NEW_USERS_SUBS_RC,

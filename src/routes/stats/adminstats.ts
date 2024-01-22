@@ -12,7 +12,7 @@ import { db_query } from "../../instances/dbQuery";
 
 router.get('/getuser/data', (req, res) => {
   //queryDB 
-  database.query(db_query.ADMIN_GET_USER_DATA, (err, data) => {
+  database.query(db_query.ADMIN_GET_USER_DATA_WITH_PRICE, (err, data) => {
     if (err) {
       console.log(err + "error")
       const dbResp = {
