@@ -46,6 +46,16 @@ router.post("/register", async (req: any, res: any) => {
   database.query(db_query.CREATE_OTP_QRY, [user_name, otp], (err, result) => {
     if (err) {
       console.log("otp entry not successful " + err)
+      const dbResp = {
+        statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+        message: {
+          success: false,
+          description: err.code
+        },
+      };
+
+      const resp = responseHandler(dbResp);
+      res.status(resp.statusCode).json(resp);
     } else {
       console.log("Successfully added otp entry");
     }
