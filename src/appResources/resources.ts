@@ -29,6 +29,7 @@ export const errorCodes = {
   INTERNAL_SERVER_ERROR: 500,
   NOT_FOUND_RESOURCE: 404,
   BAD_REQUEST: 400,
+  RESOURCE_ALREADY_EXISTS: 409
   // DB_DUPLICATE_ENTRY:
 };
 
@@ -45,7 +46,8 @@ export const errorMessages = {
   USER_NOT_FOUND: "User Not Found",
   USER_CREDENTIALS_WRONG: "Wrong userName/Pin combination!",
   USER_ALREADY_LOGGED_IN: "User is already logged in on another device",
-  USER_AUTHENTICATION_STATUS_FAILED: "User not authenticated"
+  USER_AUTHENTICATION_STATUS_FAILED: "User not authenticated",
+  USER_ALREADY_EXISTS: "User already exists"
 
 };
 

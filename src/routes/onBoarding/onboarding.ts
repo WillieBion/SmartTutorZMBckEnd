@@ -23,53 +23,79 @@ import { generateToken } from "../../appResources/jwtToken";
 // const db = require('../../models');
 
 
-router.post("/register", async (req: any, res: any) => {
+router.post("/register", (req: any, res: any) => {
   const { user_name } = req.body;
 
   // Store details in redis
   /* custom setter method */
   setter(user_name, req.body)
 
-  const { senderMessgae, otp } = generateOTPOnReg()
 
-  const respo = {
-    statusCode: successCodes.SERVER_SUCCESS,
-    message: {
-      description: `Details recieved for processing, an OTP ${otp} has been sent to your device.`,
-    }
-  }
 
-  const resp = responseHandler(respo)
+  //Check if msisdn exists already
 
-  res.status(resp.statusCode).json(resp)
-
-  database.query(db_query.CREATE_OTP_QRY, [user_name, otp], (err, result) => {
+  database.query(db_query.GET_USER_DETAILS, [user_name], (err, result) => {
     if (err) {
-      console.log("otp entry not successful " + err)
+      console.log("Unable to get user " + err)
+      return;
+    }
+    if (result.length > 0) {
       const dbResp = {
-        statusCode: errorCodes.INTERNAL_SERVER_ERROR,
-        message: {
-          success: false,
-          description: err.code
-        },
-      };
+        statusCode: errorCodes.RESOURCE_ALREADY_EXISTS,
+        message: errorMessages.USER_ALREADY_EXISTS
+      }
 
       const resp = responseHandler(dbResp);
       res.status(resp.statusCode).json(resp);
     } else {
-      console.log("Successfully added otp entry");
+      //Create otp
+      const { senderMessgae, otp } = generateOTPOnReg()
+
+      const respo = {
+        statusCode: successCodes.SERVER_SUCCESS,
+        message: {
+          description: `Details recieved for processing, an OTP ${otp} has been sent to your device.`,
+        }
+      }
+
+      const resp = responseHandler(respo)
+
+      res.status(resp.statusCode).json(resp)
+
+      database.query(db_query.CREATE_OTP_QRY, [user_name, otp], async (err, result) => {
+        if (err) {
+          console.log("otp entry not successful " + err)
+          const dbResp = {
+            statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+            message: {
+              success: false,
+              description: err.code
+            },
+          };
+
+          const resp = responseHandler(dbResp);
+          res.status(resp.statusCode).json(resp);
+
+      
+        } else {
+          console.log("Successfully added otp entry");
+              //remains processing
+          /* Send OTP to Clients Device */
+          const { success, message } = await VerifyToken(user_name, senderMessgae);
+
+          if (success) {
+            console.log(message)
+          } else {
+            console.log(message)
+          }
+        }
+      })
+
+
     }
   })
 
-  //remains processing
-  /* Send OTP to Clients Device */
-  const { success, message } = await VerifyToken(user_name, senderMessgae);
 
-  if (success) {
-    console.log(message)
-  } else {
-    console.log(message)
-  }
 
 
 
@@ -654,7 +680,7 @@ router.post('/onboarding/teacher', async (req, res) => {
         // const { password, ...user_details } = tokenGenerator;
 
         //Generate Referral_code and assign it to teacher.
-        
+
         console.log("CODE " + code + "User_name" + user_name)
         database.query(db_query.CREATE_REFERRAL_CODE, [code, user_name], async (err, result) => {
           if (err) {
