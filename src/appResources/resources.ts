@@ -29,6 +29,7 @@ export const errorCodes = {
   INTERNAL_SERVER_ERROR: 500,
   NOT_FOUND_RESOURCE: 404,
   BAD_REQUEST: 400,
+  RESOURCE_ALREADY_EXISTS: 409
   // DB_DUPLICATE_ENTRY:
 };
 
@@ -45,7 +46,8 @@ export const errorMessages = {
   USER_NOT_FOUND: "User Not Found",
   USER_CREDENTIALS_WRONG: "Wrong userName/Pin combination!",
   USER_ALREADY_LOGGED_IN: "User is already logged in on another device",
-  USER_AUTHENTICATION_STATUS_FAILED: "User not authenticated"
+  USER_AUTHENTICATION_STATUS_FAILED: "User not authenticated",
+  USER_ALREADY_EXISTS: "User already exists"
 
 };
 
@@ -69,6 +71,7 @@ export const successMessages = {
   LOGOUT_SUCCESS: "Successfully logged out",
   USER_AUTHENTICATION_STATUS: "User is authenticated.",
   VERIFICATION_CODE_SUCCESS: "Code successfully verified",
+  TEACHER_ONBOARDING: "You have successfully created a teacher"
 
 };
 
@@ -126,7 +129,7 @@ export const generateOTP = () => {
 };
 
 export const generateOTPOnReg = () => {
-  const length = 4;
+  const length = 6;
   const charset = "0123456789"; // Only digits 0-9
   let otp = "";
 
@@ -135,12 +138,48 @@ export const generateOTPOnReg = () => {
     otp += charset.charAt(randomIndex);
   }
   // const message = `Your OTP is ${otp}`;
-  const message = `Your one-time password is ${otp}. Change this password after you login to your SmartTutor ZM account. Contact support if you didn't initiate this request.`
+  const message = `Your registration one-time password is ${otp}. Contact support if you didn't initiate this request.`
 
   //   // return otp;
   const urlEncodedMessage = encodeURIComponent(message);
 
   return { otp, senderMessgae: urlEncodedMessage };
+};
+
+export const teacherDefaultPass = (referral_code: string) => {
+  const length = 6;
+  const charset = "0123456789"; // Only digits 0-9
+  let otp = "";
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    otp += charset.charAt(randomIndex);
+  }
+  // const message = `Your OTP is ${otp}`;
+  const message = `Your default login password is ${otp} and your referral ID is ${referral_code}.`
+
+  //   // return otp;
+  const urlEncodedMessage = encodeURIComponent(message);
+
+  return { otp, senderMessgae: urlEncodedMessage };
+};
+
+export const generateReferralCode = () => {
+  const length = 5;
+  const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; // Alpha Numeric A-Z - 0-9
+  let code = "";
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    code += charset.charAt(randomIndex);
+  }
+  // const message = `Your OTP is ${otp}`;
+  // const message = `Your one-time password is ${otp}. Change this password after you login to your SmartTutor ZM account. Contact support if you didn't initiate this request.`
+
+  //   // return otp;
+  // const urlEncodedMessage = encodeURIComponent(message);
+
+  return { code };
 };
 // const randomDigitsOTP = generateOTP();
 // console.log(randomDigitsOTP);

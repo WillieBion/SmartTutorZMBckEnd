@@ -16,14 +16,14 @@ import { database } from "../../instances/dbConfig";
 import { db_query } from "../../instances/dbQuery";
 
 router.post("/subscribe", (req, res) => {
-  const { user_name, amount, msisdn, subscription } = req.body;
+  const { user_name, amount, msisdn, subscription, referral_code } = req.body;
   /* Use MSISDN as identifier */
   const transID = generateTransId();
 
   try {
     database.query(
       db_query.ADD_SUBSCRIPTION_QRY,
-      [user_name, transID, subscription],
+      [user_name, transID, referral_code, subscription],
       async (error, result) => {
         if (error) {
           const dbResp = {
@@ -226,4 +226,5 @@ router.post("/smartTutor/callback", (req, res) => {
     res.status(resp.statusCode).json(resp);
   }
 });
+
 module.exports = router;

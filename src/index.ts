@@ -13,7 +13,7 @@ require('dotenv').config({ path: path.join(__dirname, '../.env') });
 // const router = express.Router();
 // const Sequelize = require("sequelize");
 import { Sequelize } from "sequelize";
-import { generateOTP } from "./appResources/resources";
+import { generateOTP, generateReferralCode } from "./appResources/resources";
 import { validateToken } from "./appResources/jwtToken";
 import { getter } from "./instances/dbConfig";
 
@@ -22,15 +22,15 @@ app.use(express.json());
 app.use(cors());
 
 //This is to ensure that all routes but for the registration and Login routes require a valid token
-/* app.use((req, res, next) => {
-  if (req.path === "/login" || req.path === "/register" || req.path === "/payment/smartTutor/callback" || req.path === "/forgotpassword/otp" || req.path === "/devicelogout" || req.path === "/getUsers/unsubscribed" || req.path === "/register/verification") {
+app.use((req, res, next) => {
+  if (req.path === "/login" || req.path === "/register" || req.path === "/payment/smartTutor/callback" || req.path === "/forgotpassword/otp" || req.path === "/devicelogout" || req.path === "/getUsers/unsubscribed" || req.path === "/register/verification" || req.path === "/dashboard/login" || req.path === "/dashboard/register") {
     return next();
   }
 
   validateToken(req, res, next);
 }); */
 
-const PORT = 1431;
+const PORT = 1430;
 
 const sequelize = new Sequelize("smart_tutor_prod", "root", "Willie#2045@1998", {
   host: "localhost",
@@ -67,9 +67,8 @@ const subscriptionManagement = require("./routes/subscription/subscription");
 // chat
 const chat = require("./routes/chat/stChatbot");
 
-// app statistics
-const stats = require("./routes/stats");
-
+//Admin
+const adminStats = require("./routes/stats/adminstats");
 // const generateTransId = () => {
 //   const prefix = "0000";
 //   const randomer = Math.floor(Math.random() * 100000000)
@@ -83,6 +82,8 @@ const stats = require("./routes/stats");
 // const value = generateOTP();
 // console.log(value);
 // app.use(express.json())
+// const value = generateReferralCode()
+// console.log(value)
 app.use("/", onbaording);
 app.use("/", login);
 app.use(
@@ -94,7 +95,7 @@ app.use(
 );
 app.use("/payment", paymentManagement, subscriptionManagement);
 app.use("/chat", chat);
-app.use("/stats", stats);
+app.use("/stats", adminStats)
 
 // console.log("onbaording: " + db.user_details);
 getter("260972156059");
