@@ -47,7 +47,8 @@ export const errorMessages = {
   USER_CREDENTIALS_WRONG: "Wrong userName/Pin combination!",
   USER_ALREADY_LOGGED_IN: "User is already logged in on another device",
   USER_AUTHENTICATION_STATUS_FAILED: "User not authenticated",
-  USER_ALREADY_EXISTS: "User already exists"
+  USER_ALREADY_EXISTS: "User already exists",
+  REFERRAL_CODE_DOESNT_EXIST: "Referral ID does not exist.",
 
 };
 
