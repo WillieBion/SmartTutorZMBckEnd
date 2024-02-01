@@ -401,17 +401,17 @@ router.get('/delete/account/(:username)', (req, res) => {
 
 })
 
-//Delete for form
-router.post("/delete-request", (req, res) => {
-  const { msisdn } = req.body;
+//This is not how I write my endpoints. This is all Bion
+router.get("/delete-request/(:username)", (req, res) => {
+  const { username } = req.params;
 
   /* check db that the msisdn provided is there */
 
-  if (msisdn) {
+  if (username) {
     res
       .status(200)
       .json({
-        message: "Request to delete account holder ${msisdn} has been successfully submitted",
+        message: `Request to delete account holder ${username} has been successfully submitted`,
       });
   } else {
     res.status(500).json({ message: "An error occured" });
