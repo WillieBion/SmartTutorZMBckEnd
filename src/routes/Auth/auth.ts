@@ -400,4 +400,21 @@ router.get('/delete/account/(:username)', (req, res) => {
   })
 
 })
+
+//Delete for form
+router.post("/delete-request", (req, res) => {
+  const { msisdn } = req.body;
+
+  /* check db that the msisdn provided is there */
+
+  if (msisdn) {
+    res
+      .status(200)
+      .json({
+        message: "Request to delete account holder ${msisdn} has been successfully submitted",
+      });
+  } else {
+    res.status(500).json({ message: "An error occured" });
+  }
+});
 module.exports = router;
