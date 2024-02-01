@@ -352,4 +352,52 @@ router.post('/dashboard/login', (req, res) => {
   })
 
 })
+
+//Delete user
+router.get('/delete/account/(:username)', (req, res) => {
+  const { username } = req.params
+  //If session delete session first.
+  //Delete session
+  database.query(db_query.DELETE_SESSION_QRY, [username], (err, result) => {
+    if (err) {
+      const dbResp = {
+        statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+        message: err.code,
+      };
+      const resp = responseHandler(dbResp);
+      res.status(resp.statusCode).json(resp);
+    } else {
+      // console.log("result: :" + result[0])
+      // // if (typeof result[0] !== 'undefined') {
+      // const respo = {
+      //   statusCode: successCodes.SERVER_SUCCESS,
+      //   message: successMessages.LOGOUT_SUCCESS
+      // };
+      // const resp = responseHandler(respo);
+
+      // res.status(resp.statusCode).json(resp);
+      database.query(db_query.DELETE_USER_DETAILS, [username], (error, result) => {
+        if (error) {
+          const dbResp = {
+            statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+            message: error.code,
+          };
+          const resp = responseHandler(dbResp);
+          res.status(resp.statusCode).json(resp);
+        } else {
+          const respo = {
+            statusCode: successCodes.SERVER_SUCCESS,
+            message: successMessages.DELETE_USER
+          };
+          const resp = responseHandler(respo);
+          res.status(resp.statusCode).json(resp);
+        }
+
+      })
+
+    }
+
+  })
+
+})
 module.exports = router;
