@@ -28,7 +28,7 @@ app.use((req, res, next) => {
   }
 
   validateToken(req, res, next);
-}); */
+});
 
 const PORT = 1430;
 

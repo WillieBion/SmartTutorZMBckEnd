@@ -20,7 +20,7 @@ router.post("/login", (req, res) => {
   const { msisdn, pin, device_id } = req.body;
 
   database.query(db_query.GET_SESSION_QRY, msisdn, (err, session) => {
-    console.log(session)
+    console.log(session);
     if (err) {
       const dbResp = {
         statusCode: errorCodes.INTERNAL_SERVER_ERROR,
@@ -28,7 +28,10 @@ router.post("/login", (req, res) => {
       };
       const resp = responseHandler(dbResp);
       res.status(resp.statusCode).json(resp);
-    } else if (session[0]?.user_name === msisdn && session[0]?.device_id !== device_id) {
+    } else if (
+      session[0]?.user_name === msisdn &&
+      session[0]?.device_id !== device_id
+    ) {
       // const {user_name, device_id, token, is_valid} = session[0];
 
       const respo = {
@@ -38,7 +41,10 @@ router.post("/login", (req, res) => {
       const resp = responseHandler(respo);
 
       res.status(resp.statusCode).json(resp);
-    } else if (session[0]?.user_name === msisdn && session[0].device_id === device_id) {
+    } else if (
+      session[0]?.user_name === msisdn &&
+      session[0].device_id === device_id
+    ) {
       database.query(db_query.LOGIN_QRY, msisdn, (err, result: LoginI[]) => {
         console.log(result);
         if (err) {
@@ -54,14 +60,13 @@ router.post("/login", (req, res) => {
           bcrypt.compare(pin, result[0].password, (error, response) => {
             if (response) {
               const { password, ...user } = result[0];
-              const { msisdn, user_name } = result[0]
+              const { msisdn, user_name } = result[0];
               // tokenGenerator.device_id = device_id
-              const tokenGenerator = { msisdn, user_name, password, device_id }
+              const tokenGenerator = { msisdn, user_name, password, device_id };
 
               const userAccToken = generateToken(tokenGenerator);
               // const is_valid = true;
               //Write the session to sessions table
-
 
               const respo = {
                 statusCode: successCodes.SERVER_SUCCESS,
@@ -69,15 +74,12 @@ router.post("/login", (req, res) => {
                   description: successMessages.LOGIN_SUCCESS,
                   user_details: user,
                 },
-                jwtToken: userAccToken
+                jwtToken: userAccToken,
               };
               const resp = responseHandler(respo);
               res.status(resp.statusCode).json(resp);
 
-
-
               //repetiton ====>>> needs refactoring
-
             } else {
               const respo = {
                 statusCode: errorCodes.BAD_REQUEST,
@@ -117,31 +119,34 @@ router.post("/login", (req, res) => {
           bcrypt.compare(pin, result[0].password, (error, response) => {
             if (response) {
               const { password, ...user } = result[0];
-              const { msisdn, user_name } = result[0]
+              const { msisdn, user_name } = result[0];
               // tokenGenerator.device_id = device_id
-              const tokenGenerator = { msisdn, user_name, password, device_id }
+              const tokenGenerator = { msisdn, user_name, password, device_id };
               const userAccToken = generateToken(tokenGenerator);
               const is_valid = true;
               //Write the session to sessions table
-              database.query(db_query.ADD_SESSION_QRY, [msisdn, device_id, is_valid], (err, addSession) => {
-                if (err) {
-                  console.log(err)
-                } else {
-                  const respo = {
-                    statusCode: successCodes.SERVER_SUCCESS,
-                    message: {
-                      description: successMessages.LOGIN_SUCCESS,
-                      user_details: user,
-                    },
-                    jwtToken: userAccToken
-                  };
-                  const resp = responseHandler(respo);
-                  res.status(resp.statusCode).json(resp);
+              database.query(
+                db_query.ADD_SESSION_QRY,
+                [msisdn, device_id, is_valid],
+                (err, addSession) => {
+                  if (err) {
+                    console.log(err);
+                  } else {
+                    const respo = {
+                      statusCode: successCodes.SERVER_SUCCESS,
+                      message: {
+                        description: successMessages.LOGIN_SUCCESS,
+                        user_details: user,
+                      },
+                      jwtToken: userAccToken,
+                    };
+                    const resp = responseHandler(respo);
+                    res.status(resp.statusCode).json(resp);
+                  }
                 }
-              })
+              );
 
               //repetiton ====>>> needs refactoring
-
             } else {
               const respo = {
                 statusCode: errorCodes.BAD_REQUEST,
@@ -165,15 +170,13 @@ router.post("/login", (req, res) => {
         }
       });
     }
-  })
+  });
   return;
-
-
 });
 
-//Log out session 
-router.post('/logout', (req, res) => {
-  const { user_name } = req.body
+//Log out session
+router.post("/logout", (req, res) => {
+  const { user_name } = req.body;
   //Delete session
   database.query(db_query.DELETE_SESSION_QRY, [user_name], (err, result) => {
     if (err) {
@@ -184,11 +187,11 @@ router.post('/logout', (req, res) => {
       const resp = responseHandler(dbResp);
       res.status(resp.statusCode).json(resp);
     } else {
-      console.log("result: :" + result[0])
+      console.log("result: :" + result[0]);
       // if (typeof result[0] !== 'undefined') {
       const respo = {
         statusCode: successCodes.SERVER_SUCCESS,
-        message: successMessages.LOGOUT_SUCCESS
+        message: successMessages.LOGOUT_SUCCESS,
       };
       const resp = responseHandler(respo);
 
@@ -202,15 +205,13 @@ router.post('/logout', (req, res) => {
 
       //   res.status(resp.statusCode).json(resp);
       // }
-
     }
-
-  })
-})
+  });
+});
 
 //Same as log out but for device log out
-router.post('/devicelogout', (req, res) => {
-  const { user_name } = req.body
+router.post("/devicelogout", (req, res) => {
+  const { user_name } = req.body;
   //Delete session
   database.query(db_query.DELETE_SESSION_QRY, [user_name], (err, result) => {
     if (err) {
@@ -221,11 +222,11 @@ router.post('/devicelogout', (req, res) => {
       const resp = responseHandler(dbResp);
       res.status(resp.statusCode).json(resp);
     } else {
-      console.log("result: :" + result[0])
+      console.log("result: :" + result[0]);
       // if (typeof result[0] !== 'undefined') {
       const respo = {
         statusCode: successCodes.SERVER_SUCCESS,
-        message: successMessages.LOGOUT_SUCCESS
+        message: successMessages.LOGOUT_SUCCESS,
       };
       const resp = responseHandler(respo);
 
@@ -239,20 +240,68 @@ router.post('/devicelogout', (req, res) => {
 
       //   res.status(resp.statusCode).json(resp);
       // }
-
     }
-
-  })
-})
+  });
+});
 
 //Authenticated route
-router.get('/authenticated', (req, res) => {
+router.get("/authenticated", (req, res) => {
   // const {} = req.query;
   // console.log(req.headers.user_name);
   const { user_name, device_id } = req.headers;
-  database.query(db_query.GET_SESSION_AUTH_STATUS_QRY, [user_name, device_id], (err, result) => {
-    const isValid = result[0]?.is_valid === 1 ? true : false;
-    console.log(isValid + " is_valid")
+  database.query(
+    db_query.GET_SESSION_AUTH_STATUS_QRY,
+    [user_name, device_id],
+    (err, result) => {
+      const isValid = result[0]?.is_valid === 1 ? true : false;
+      console.log(isValid + " is_valid");
+      if (err) {
+        const dbResp = {
+          statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+          message: errorMessages.INTERNAL_SERVER_ERROR,
+        };
+        const resp = responseHandler(dbResp);
+        res.status(resp.statusCode).json(resp);
+      } else {
+        if (
+          user_name === result[0]?.user_name ||
+          device_id === result[0]?.device_id
+        ) {
+          const respo = {
+            statusCode: successCodes.SERVER_SUCCESS,
+            message: {
+              isAuthenticated: isValid,
+              description: successMessages.USER_AUTHENTICATION_STATUS,
+            },
+          };
+          const resp = responseHandler(respo);
+
+          res.status(resp.statusCode).json(resp);
+        } else {
+          const respo = {
+            statusCode: errorCodes.BAD_REQUEST,
+            message: {
+              isAuthenticated: isValid,
+              description: errorMessages.USER_AUTHENTICATION_STATUS_FAILED,
+            },
+          };
+          const resp = responseHandler(respo);
+
+          res.status(resp.statusCode).json(resp);
+        }
+      }
+    }
+  );
+});
+
+//Dashboard login
+
+/* Login */
+router.post("/dashboard/login", (req, res) => {
+  const { msisdn, pin, device_id } = req.body;
+
+  // bcrypt.compare()
+  database.query(db_query.LOGIN_QRY, msisdn, (err, result: LoginI[]) => {
     if (err) {
       const dbResp = {
         statusCode: errorCodes.INTERNAL_SERVER_ERROR,
@@ -261,43 +310,55 @@ router.get('/authenticated', (req, res) => {
       const resp = responseHandler(dbResp);
       res.status(resp.statusCode).json(resp);
     } else {
-      if (user_name === result[0]?.user_name || device_id === result[0]?.device_id) {
+      if (result.length !== 0) {
+        bcrypt.compare(pin, result[0].password, (err, response) => {
+          if (response) {
+            const { password, ...user } = result[0];
+            const { msisdn, user_name } = result[0];
 
-        const respo = {
-          statusCode: successCodes.SERVER_SUCCESS,
-          message: {
-            isAuthenticated: isValid,
-            description: successMessages.USER_AUTHENTICATION_STATUS
-          },
-        };
-        const resp = responseHandler(respo);
+            const tokenGenerator = { msisdn, user_name, password, device_id };
 
-        res.status(resp.statusCode).json(resp);
+            const userAccToken = generateToken(tokenGenerator);
+
+            const respo = {
+              statusCode: successCodes.SERVER_SUCCESS,
+              message: {
+                description: successMessages.LOGIN_SUCCESS,
+                user_details: user,
+              },
+              jwtToken: userAccToken,
+            };
+            const resp = responseHandler(respo);
+            res.status(resp.statusCode).json(resp);
+          } else {
+            const respo = {
+              statusCode: errorCodes.BAD_REQUEST,
+              message: errorMessages.USER_CREDENTIALS_WRONG,
+            };
+            const resp = responseHandler(respo);
+
+            res.status(resp.statusCode).json(resp);
+          }
+        });
       } else {
         const respo = {
-          statusCode: errorCodes.BAD_REQUEST,
-          message: {
-            isAuthenticated: isValid,
-            description: errorMessages.USER_AUTHENTICATION_STATUS_FAILED
-          },
+          statusCode: errorCodes.NOT_FOUND_RESOURCE,
+          message: errorMessages.USER_NOT_FOUND,
         };
         const resp = responseHandler(respo);
 
         res.status(resp.statusCode).json(resp);
       }
     }
-  })
+  });
+});
 
-})
+/* delete request */
+router.post("/delete-request", (req, res) => {
+  const { msisdn } = req.body;
 
-//Dashboard login
-
-/* Login */
-router.post('/dashboard/login', (req, res) => {
-  const { msisdn, pin, device_id } = req.body
-
-  // bcrypt.compare()
-  database.query(db_query.LOGIN_QRY, msisdn, (err, result: LoginI[]) => {
+  /* check db that the msisdn provided is there */
+  /* database.query(db_query.LOGIN_QRY, msisdn, (err, result: LoginI[]) => {
     if (err) {
       const dbResp = {
         statusCode: errorCodes.INTERNAL_SERVER_ERROR,
@@ -349,7 +410,16 @@ router.post('/dashboard/login', (req, res) => {
         res.status(resp.statusCode).json(resp);
       }
     }
-  })
+  }) */
 
-})
+  if (msisdn) {
+    res
+      .status(200)
+      .json({
+        message: `Request to delete account holder ${msisdn} has been successfully submitted`,
+      });
+  } else {
+    res.status(500).json({ message: `An error occured` });
+  }
+});
 module.exports = router;

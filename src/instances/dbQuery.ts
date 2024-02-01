@@ -1,8 +1,10 @@
-const CREATE_USER_QUERY = "INSERT INTO user_details (msisdn, user_name, password, user_role, user_status, device_id) VALUES (?, ? ,?, ?, ?, ?)";
+const CREATE_USER_QUERY =
+  "INSERT INTO user_details (msisdn, user_name, password, user_role, user_status, device_id) VALUES (?, ? ,?, ?, ?, ?)";
 const GET_USER_DETAILS = "SELECT * FROM user_details WHERE user_name = ?";
 const LOGIN_QRY = "SELECT * FROM user_details WHERE msisdn = ?;";
 /* User status */
-const GET_UNSUBSCRIBED_USERS = "SELECT * from user_details WHERE user_status = ?"
+const GET_UNSUBSCRIBED_USERS =
+  "SELECT * from user_details WHERE user_status = ?";
 // const GET_USER_SUBSCRIPTION_STATUS = "SELECT * ";
 // const ADD_SUBJECT_QRY = "INSERT INTO
 const ADD_SUBJECT_QRY =
@@ -26,7 +28,6 @@ const ADD_LESSON_QRY =
   "INSERT INTO lessons (title, duration,media_type, media_value, subject_id) VALUES (?, ?, ?, ?, ?)";
 const GET_LESSON_BY_SUBJECT = "SELECT * FROM lessons WHERE subject_id = ?";
 
-
 /* Topic */
 
 const ADD_TOPIC_QRY =
@@ -45,7 +46,8 @@ const ADD_SUBSCRIPTION_QRY =
 const GET_SUBSCRIPTION_DETAILS_QRY = "SELECT * FROM subscription_details";
 const GET_SUBSCRIPTION_DETAILS_BY_QRY =
   "SELECT * FROM subscription_details WHERE id = ?";
-const GET_SUBSCRIPTION_STATUS_QRY = "SELECT * FROM subscriptions WHERE user_id = ?";
+const GET_SUBSCRIPTION_STATUS_QRY =
+  "SELECT * FROM subscriptions WHERE user_id = ?";
 
 /* Update Password */
 const UPDATE_PASSWORD_QRY =
@@ -68,8 +70,10 @@ const VERIFY_USERNAME_QRY =
 
 //sessions
 const GET_SESSION_QRY = "SELECT * FROM sessions WHERE user_name = ?";
-const GET_SESSION_AUTH_STATUS_QRY = "SELECT * FROM sessions WHERE user_name = ? AND device_id = ?";
-const ADD_SESSION_QRY = "INSERT INTO sessions (user_name, device_id, is_valid) VALUES (?, ?, ?)";
+const GET_SESSION_AUTH_STATUS_QRY =
+  "SELECT * FROM sessions WHERE user_name = ? AND device_id = ?";
+const ADD_SESSION_QRY =
+  "INSERT INTO sessions (user_name, device_id, is_valid) VALUES (?, ?, ?)";
 const DELETE_SESSION_QRY = "DELETE FROM sessions WHERE user_name = ?";
 // const insertQuery = (tableName: string ) => {
 // String ADD_SUBJECT_QRY = `INSERT INTO ${tableName} ()
@@ -80,8 +84,8 @@ const CREATE_OTP_QRY = "INSERT INTO otp (user, otp) VALUES (?, ?)";
 const GET_OTP_QRY = "SELECT * FROM otp WHERE user = ? AND otp = ?";
 
 //Referral_Code
-const CREATE_REFERRAL_CODE = "INSERT INTO referral_codes (code, userID) VALUES (?, ?)";
-
+const CREATE_REFERRAL_CODE =
+  "INSERT INTO referral_codes (code, userID) VALUES (?, ?)";
 
 //ADMIN STATS
 const ADMIN_GET_USER_DATA = `SELECT
@@ -159,10 +163,7 @@ ORDER BY registration_date
 
 `;
 
-
 //daily number of new users, subscription and referrals
-
-
 
 const GET_DAILY_NUMBER_NEW_USERS_SUBS_RC = `SELECT
     COUNT(DISTINCT CASE WHEN ud.user_role = 1 AND DATE(ud.created_at) = CURRENT_DATE THEN ud.msisdn END) AS new_users_count,
@@ -221,7 +222,7 @@ user_details ud
 LEFT JOIN
 subscriptions sub ON ud.msisdn = sub.user_id AND sub.is_valid = 1
 LEFT JOIN
-subscription_details sd ON sub.subscription = sd.id`
+subscription_details sd ON sub.subscription = sd.id`;
 
 const GET_SUBS_RC_TEACHER = `SELECT
 teachers.msisdn AS teacher_msisdn,
@@ -242,18 +243,21 @@ teachers.msisdn, rc.code`;
 /* Query function*/
 
 const deleteQuery = (table: string, column: string) => {
-  return `DELETE FROM ${table} WHERE ${column} = ?`
-}
+  return `DELETE FROM ${table} WHERE ${column} = ?`;
+};
 
-const updateQuery = (table: string, column: string, condition: string, isUpdateAll: boolean | undefined | null) => {
+const updateQuery = (
+  table: string,
+  column: string,
+  condition: string,
+  isUpdateAll: boolean | undefined | null
+) => {
   if (!isUpdateAll) {
-    return `UPDATE ${table} SET ${column} = ? WHERE ${condition} = ?`
-
+    return `UPDATE ${table} SET ${column} = ? WHERE ${condition} = ?`;
   } else {
-    return `UPDATE ${table} SET ${column} WHERE ${condition} = ?`
-
+    return `UPDATE ${table} SET ${column} WHERE ${condition} = ?`;
   }
-}
+};
 
 export const db_query = {
   LOGIN_QRY,
@@ -302,5 +306,5 @@ export const db_query = {
   GET_COUNT_USERS_ACTIVE_INACTIVE_TEACHERS,
   GET_SUBS_RC_TEACHER,
   deleteQuery,
-  updateQuery
+  updateQuery,
 };
