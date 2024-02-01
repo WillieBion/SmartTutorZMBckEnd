@@ -47,7 +47,8 @@ export const errorMessages = {
   USER_CREDENTIALS_WRONG: "Wrong userName/Pin combination!",
   USER_ALREADY_LOGGED_IN: "User is already logged in on another device",
   USER_AUTHENTICATION_STATUS_FAILED: "User not authenticated",
-  USER_ALREADY_EXISTS: "User already exists"
+  USER_ALREADY_EXISTS: "User already exists",
+  REFERRAL_CODE_DOESNT_EXIST: "Referral ID does not exist.",
 
 };
 
@@ -69,6 +70,7 @@ export const successMessages = {
   UPDATED_SUBSCRIPTION_SUCCESS: "Subscription Successfully Updated",
   RETREIVE_USER_DETAILS_SUCCESS: "Successfully retrieved user details",
   LOGOUT_SUCCESS: "Successfully logged out",
+  DELETE_USER: "User Deleted",
   USER_AUTHENTICATION_STATUS: "User is authenticated.",
   VERIFICATION_CODE_SUCCESS: "Code successfully verified",
   TEACHER_ONBOARDING: "You have successfully created a teacher"
@@ -156,7 +158,7 @@ export const teacherDefaultPass = (referral_code: string) => {
     otp += charset.charAt(randomIndex);
   }
   // const message = `Your OTP is ${otp}`;
-  const message = `Your default login password is ${otp} and your referral ID is ${referral_code}.`
+  const message = `Your default login password is ${otp} and your referral ID is ${referral_code}. https://etutor.co.zm`
 
   //   // return otp;
   const urlEncodedMessage = encodeURIComponent(message);

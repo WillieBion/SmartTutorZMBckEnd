@@ -25,6 +25,16 @@ router.post("/subscribe", (req, res) => {
       db_query.ADD_SUBSCRIPTION_QRY,
       [user_name, transID, referral_code, subscription],
       async (error, result) => {
+
+        if (error && error.code === "ER_NO_REFERENCED_ROW_2"){
+          const dbResp = {
+            statusCode: errorCodes.NOT_FOUND_RESOURCE,
+            message: errorMessages.REFERRAL_CODE_DOESNT_EXIST,
+          };
+          const resp = responseHandler(dbResp);
+          res.status(resp.statusCode).json(resp);
+          return;
+        }
         if (error) {
           const dbResp = {
             statusCode: errorCodes.INTERNAL_SERVER_ERROR,
@@ -32,6 +42,7 @@ router.post("/subscribe", (req, res) => {
           };
           const resp = responseHandler(dbResp);
           res.status(resp.statusCode).json(resp);
+          return;
         } else {
           // const dbResp = {
           //   statusCode: successCodes.SERVER_SUCCESS,

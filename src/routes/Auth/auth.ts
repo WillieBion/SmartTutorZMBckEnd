@@ -358,59 +358,6 @@ router.post("/delete-request", (req, res) => {
   const { msisdn } = req.body;
 
   /* check db that the msisdn provided is there */
-  /* database.query(db_query.LOGIN_QRY, msisdn, (err, result: LoginI[]) => {
-    if (err) {
-      const dbResp = {
-        statusCode: errorCodes.INTERNAL_SERVER_ERROR,
-        message: errorMessages.INTERNAL_SERVER_ERROR,
-      };
-      const resp = responseHandler(dbResp);
-      res.status(resp.statusCode).json(resp);
-    } else {
-      if (result.length !== 0) {
-        bcrypt.compare(pin, result[0].password, (err, response) => {
-          if (response) {
-            const { password, ...user } = result[0];
-            const { msisdn, user_name } = result[0];
-
-            const tokenGenerator = { msisdn, user_name, password, device_id };
-
-            const userAccToken = generateToken(tokenGenerator);
-
-            const respo = {
-              statusCode: successCodes.SERVER_SUCCESS,
-              message: {
-                description: successMessages.LOGIN_SUCCESS,
-                user_details: user,
-              },
-              jwtToken: userAccToken
-            };
-            const resp = responseHandler(respo);
-            res.status(resp.statusCode).json(resp);
-          } else {
-            const respo = {
-              statusCode: errorCodes.BAD_REQUEST,
-              message: errorMessages.USER_CREDENTIALS_WRONG,
-            };
-            const resp = responseHandler(respo);
-
-            res.status(resp.statusCode).json(resp);
-          }
-
-        })
-
-
-      } else {
-        const respo = {
-          statusCode: errorCodes.NOT_FOUND_RESOURCE,
-          message: errorMessages.USER_NOT_FOUND,
-        };
-        const resp = responseHandler(respo);
-
-        res.status(resp.statusCode).json(resp);
-      }
-    }
-  }) */
 
   if (msisdn) {
     res
@@ -422,4 +369,52 @@ router.post("/delete-request", (req, res) => {
     res.status(500).json({ message: `An error occured` });
   }
 });
+
+//Delete user
+router.get('/delete/account/(:username)', (req, res) => {
+  const { username } = req.params
+  //If session delete session first.
+  //Delete session
+  database.query(db_query.DELETE_SESSION_QRY, [username], (err, result) => {
+    if (err) {
+      const dbResp = {
+        statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+        message: err.code,
+      };
+      const resp = responseHandler(dbResp);
+      res.status(resp.statusCode).json(resp);
+    } else {
+      // console.log("result: :" + result[0])
+      // // if (typeof result[0] !== 'undefined') {
+      // const respo = {
+      //   statusCode: successCodes.SERVER_SUCCESS,
+      //   message: successMessages.LOGOUT_SUCCESS
+      // };
+      // const resp = responseHandler(respo);
+
+      // res.status(resp.statusCode).json(resp);
+      database.query(db_query.DELETE_USER_DETAILS, [username], (error, result) => {
+        if (error) {
+          const dbResp = {
+            statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+            message: error.code,
+          };
+          const resp = responseHandler(dbResp);
+          res.status(resp.statusCode).json(resp);
+        } else {
+          const respo = {
+            statusCode: successCodes.SERVER_SUCCESS,
+            message: successMessages.DELETE_USER
+          };
+          const resp = responseHandler(respo);
+          res.status(resp.statusCode).json(resp);
+        }
+
+      })
+
+    }
+
+  })
+
+})
 module.exports = router;
