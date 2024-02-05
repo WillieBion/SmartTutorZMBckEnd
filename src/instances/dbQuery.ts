@@ -240,6 +240,47 @@ teachers.user_role = 4
 GROUP BY
 teachers.msisdn, rc.code`;
 
+
+///Sales Managers
+
+const GET_TEACHERS_UNDER_SALES_MANAGER = `
+SELECT 
+    t.teacher_msisdn ,
+    rc.code,
+    SUM(CASE WHEN s.subscription = 1 THEN 1 ELSE 0 END) AS monthly_subscriptions,
+    SUM(CASE WHEN s.subscription = 2 THEN 1 ELSE 0 END) AS termly_subscriptions
+FROM 
+    teachers t
+JOIN 
+    sales_managers sm ON sm.id  = t.sales_manager 
+JOIN 
+    referral_codes rc ON rc.userID  = t.teacher_msisdn 
+LEFT JOIN 
+    subscriptions s ON s.referral_id  = rc.code 
+GROUP BY 
+    t.teacher_msisdn, sm.id, rc.code`;
+
+
+//Count of Teachers under sales
+
+const GET_COUNT_TEACHERS_UNDER_SALES_MANAGER = `
+SELECT COUNT(*) AS total_number_of_teachers from teachers t 
+where t.sales_manager = ?`;
+
+//Count of referral under sales manager - I believe this should be teachers referral codes under sales manager - need refining
+
+const GET_COUNT_REFERRALS_USED_UNDER_SALES_MANAGER = `
+SELECT 
+    COUNT(DISTINCT rc.code) AS referral_codes,
+    COUNT(DISTINCT s.subscription) AS daily_subscriptions 
+FROM 
+    sales_managers sm 
+JOIN 
+    referral_codes rc ON rc.userID = sm.msisdn 
+JOIN 
+    subscriptions s ON s.referral_id = rc.code;
+`
+
 /* Query function*/
 
 const deleteQuery = (table: string, column: string) => {
@@ -303,6 +344,9 @@ export const db_query = {
   GET_ADMIN_RC_SUBS,
   GET_COUNT_USERS_ACTIVE_INACTIVE_TEACHERS,
   GET_SUBS_RC_TEACHER,
+  GET_TEACHERS_UNDER_SALES_MANAGER,
+  GET_COUNT_TEACHERS_UNDER_SALES_MANAGER,
+  GET_COUNT_REFERRALS_USED_UNDER_SALES_MANAGER,
   deleteQuery,
   updateQuery
 };
