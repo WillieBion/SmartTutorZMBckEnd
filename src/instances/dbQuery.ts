@@ -278,7 +278,51 @@ FROM
 JOIN 
     referral_codes rc ON rc.userID = sm.msisdn 
 JOIN 
-    subscriptions s ON s.referral_id = rc.code;
+    subscriptions s ON s.referral_id = rc.code
+`;
+
+/* ************************************ Students *********************************/
+
+const GET_STUDENTS_ACTIVELY_USING_REFERRAL_CODE = `
+SELECT
+s.msisdn AS student_msisdn,
+rc.code AS referral_code,
+CASE
+    WHEN sub.subscription = 1 THEN '1'
+    WHEN sub.subscription = 2 THEN '2'
+    ELSE NULL
+END AS subscription
+FROM
+subscriptions sub
+JOIN
+referral_codes rc ON sub.referral_id = rc.code
+JOIN
+user_details s ON s.msisdn = sub.user_id
+JOIN
+teachers t ON t.teacher_msisdn = rc.userID
+WHERE
+sub.is_valid = 1
+AND rc.code = ?
+GROUP BY
+s.msisdn, rc.code, subscription
+`;
+
+const GET_COUNT_OF_STUDENTS_SUBSCRIPTION_TEACHER_REFERRAL = `
+SELECT
+COUNT(DISTINCT sub.id) AS referral_code_usage,
+COUNT(DISTINCT s.msisdn) AS number_of_students
+FROM
+subscriptions sub
+JOIN
+referral_codes rc ON sub.referral_id = rc.code
+JOIN
+user_details s ON s.msisdn = sub.user_id
+JOIN
+teachers t ON t.teacher_msisdn = rc.userID
+WHERE
+sub.is_valid = 1
+AND rc.code = ?
+AND DATE(sub.created_at) = CURRENT_DATE;
 `
 
 /* Query function*/
@@ -347,6 +391,8 @@ export const db_query = {
   GET_TEACHERS_UNDER_SALES_MANAGER,
   GET_COUNT_TEACHERS_UNDER_SALES_MANAGER,
   GET_COUNT_REFERRALS_USED_UNDER_SALES_MANAGER,
+  GET_STUDENTS_ACTIVELY_USING_REFERRAL_CODE,
+  GET_COUNT_OF_STUDENTS_SUBSCRIPTION_TEACHER_REFERRAL,
   deleteQuery,
   updateQuery
 };
