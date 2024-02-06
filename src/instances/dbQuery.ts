@@ -253,23 +253,41 @@ teachers.msisdn, rc.code`;
 
 ///Sales Managers
 
-const GET_TEACHERS_UNDER_SALES_MANAGER = `
-SELECT 
-    t.teacher_msisdn ,
-    rc.code,
-    SUM(CASE WHEN s.subscription = 1 THEN 1 ELSE 0 END) AS monthly_subscriptions,
-    SUM(CASE WHEN s.subscription = 2 THEN 1 ELSE 0 END) AS termly_subscriptions
-FROM 
-    teachers t
-JOIN 
-    sales_managers sm ON sm.id  = t.sales_manager 
-JOIN 
-    referral_codes rc ON rc.userID  = t.teacher_msisdn 
-LEFT JOIN 
-    subscriptions s ON s.referral_id  = rc.code 
-GROUP BY 
-    t.teacher_msisdn, sm.id, rc.code`;
+// const GET_TEACHERS_UNDER_SALES_MANAGER = `
+// SELECT 
+//     t.teacher_msisdn ,
+//     rc.code,
+//     SUM(CASE WHEN s.subscription = 1 THEN 1 ELSE 0 END) AS monthly_subscriptions,
+//     SUM(CASE WHEN s.subscription = 2 THEN 1 ELSE 0 END) AS termly_subscriptions
+// FROM 
+//     teachers t
+// JOIN 
+//     sales_managers sm ON sm.id  = t.sales_manager 
+// JOIN 
+//     referral_codes rc ON rc.userID  = t.teacher_msisdn 
+// LEFT JOIN 
+//     subscriptions s ON s.referral_id  = rc.code 
+// GROUP BY 
+//     t.teacher_msisdn, sm.id, rc.code`;
 
+
+const GET_TEACHERS_UNDER_SALES_MANAGER  = `SELECT 
+t.teacher_msisdn ,
+rc.code,
+SUM(CASE WHEN s.subscription = 1 THEN 1 ELSE 0 END) AS monthly_subscriptions,
+SUM(CASE WHEN s.subscription = 2 THEN 1 ELSE 0 END) AS termly_subscriptions
+FROM 
+teachers t
+JOIN 
+sales_managers sm ON sm.id = t.sales_manager 
+JOIN 
+referral_codes rc ON rc.userID = t.teacher_msisdn 
+LEFT JOIN 
+subscriptions s ON s.referral_id = rc.code 
+WHERE
+sm.id = ?
+GROUP BY 
+t.teacher_msisdn, sm.id, rc.code;`
 
 //Count of Teachers under sales
 
