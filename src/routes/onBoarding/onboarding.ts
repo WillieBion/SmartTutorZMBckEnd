@@ -672,7 +672,7 @@ router.post('/onboarding/teacher', async (req, res) => {
   const {
     user_name,
     // password
-    sales_manger,
+    sales_manager,
   } = req.body
   //CONSTANTS
   const device_id = "web";
@@ -713,7 +713,7 @@ router.post('/onboarding/teacher', async (req, res) => {
             res.status(resp.statusCode).json(resp);
           } else {
             // Insert teacher into teacher table
-            database.query(db_query.INSERT_INTO_TEACHER_TABLE,[msisdn, sales_manger],  (err, result) => {
+            database.query(db_query.INSERT_INTO_TEACHER_TABLE,[msisdn, sales_manager],  (err, result) => {
               if (err){
                 console.log(err + "Error creating teacher in teacher table");
                 return;
