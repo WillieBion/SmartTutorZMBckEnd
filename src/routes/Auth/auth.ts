@@ -297,7 +297,7 @@ router.post('/dashboard/login', (req, res) => {
   const { msisdn, pin, device_id } = req.body
 
   // bcrypt.compare()
-  database.query(db_query.LOGIN_QRY, msisdn, (err, result: LoginI[]) => {
+  database.query(db_query.LOGIN_QRY, msisdn, (err, result: any) => {
     if (err) {
       const dbResp = {
         statusCode: errorCodes.INTERNAL_SERVER_ERROR,
@@ -316,16 +316,93 @@ router.post('/dashboard/login', (req, res) => {
 
             const userAccToken = generateToken(tokenGenerator);
 
-            const respo = {
-              statusCode: successCodes.SERVER_SUCCESS,
-              message: {
-                description: successMessages.LOGIN_SUCCESS,
-                user_details: user,
-              },
-              jwtToken: userAccToken
-            };
-            const resp = responseHandler(respo);
-            res.status(resp.statusCode).json(resp);
+            if (user.user_role == 4){
+              database.query(db_query.GET_TEACHER_REFERRAL_CODE, [msisdn], (err, result) => {
+                if (err){
+                  console.log(err)
+                  const dbResp = {
+                    statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+                    message: errorMessages.INTERNAL_SERVER_ERROR,
+                  };
+                  const resp = responseHandler(dbResp);
+                  res.status(resp.statusCode).json(resp);
+                  // return;
+                }else if (result.length > 0 ) {
+                  // user.referral
+                   const code = result[0].code;
+                  user.referralId = code
+                  // const user_details = {
+                  //   user,
+                  //   code
+
+                  // }
+                 
+                  const respo = {
+                    statusCode: successCodes.SERVER_SUCCESS,
+                    message: {
+                      description: successMessages.LOGIN_SUCCESS,
+                      user_details: user
+                    },
+                    jwtToken: userAccToken
+                  };
+                  const resp = responseHandler(respo);
+                  res.status(resp.statusCode).json(resp);
+                } else {
+                  const respo = {
+                    statusCode: errorCodes.NOT_FOUND_RESOURCE,
+                    message: errorMessages.USER_NOT_FOUND,
+                  };
+                  const resp = responseHandler(respo);
+          
+                  res.status(resp.statusCode).json(resp);
+                }
+              })
+            }else if (user.user_role == 3){
+              database.query(db_query.GET_SALES_MANAGER_ID, [msisdn], (err, result) => {
+                console.log(user.user_role + "user role\n")
+                if (err){
+                  console.log(err)
+                  const dbResp = {
+                    statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+                    message: errorMessages.INTERNAL_SERVER_ERROR,
+                  };
+                  const resp = responseHandler(dbResp);
+                  res.status(resp.statusCode).json(resp);
+                  // return;
+                }else if (result.length > 0 ) {
+                  // user.referral
+                  const sales_manager_id = result[0].id;
+                  user.userId = sales_manager_id
+                  // const user_details = {
+                  //   user,
+                  //   sales_manager_id
+
+                  // }
+                  const respo = {
+                    statusCode: successCodes.SERVER_SUCCESS,
+                    message: {
+                      description: successMessages.LOGIN_SUCCESS,
+                      user_details: user
+                    },
+                    jwtToken: userAccToken
+                  };
+                  const resp = responseHandler(respo);
+                  res.status(resp.statusCode).json(resp);
+                }else {
+                  const respo = {
+                    statusCode: errorCodes.NOT_FOUND_RESOURCE,
+                    message: errorMessages.USER_NOT_FOUND,
+                  };
+                  const resp = responseHandler(respo);
+          
+                  res.status(resp.statusCode).json(resp);
+                }
+              })
+            }
+
+        
+
+          
           } else {
             const respo = {
               statusCode: errorCodes.BAD_REQUEST,

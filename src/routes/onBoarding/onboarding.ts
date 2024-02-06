@@ -634,6 +634,20 @@ router.post('/dashboard/register', (req, res) => {
         const userAccToken = generateToken(tokenGenerator);
         const { password, ...user_details } = tokenGenerator;
 
+        if (user_role == 3){
+          database.query(db_query.INSERT_INTO_SALES_MANAGER_TABLE, [msisdn], (err, result) => {
+            if (err){
+              console.log(err);
+              return;
+
+            }
+
+            console.log("Successfully added sales manager to sales_manager table");
+          })
+        }
+
+      
+
         const dbResp = {
           statusCode: successCodes.SERVER_SUCCESS,
           message: {
@@ -646,16 +660,19 @@ router.post('/dashboard/register', (req, res) => {
         };
         const resp = responseHandler(dbResp);
         res.status(resp.statusCode).json(resp);
+        
       }
     })
   })
 
 })
+/* need to also add the teacher to the teachers table */
 
 router.post('/onboarding/teacher', async (req, res) => {
   const {
     user_name,
     // password
+    sales_manger,
   } = req.body
   //CONSTANTS
   const device_id = "web";
@@ -695,6 +712,16 @@ router.post('/onboarding/teacher', async (req, res) => {
             const resp = responseHandler(dbResp);
             res.status(resp.statusCode).json(resp);
           } else {
+            // Insert teacher into teacher table
+            database.query(db_query.INSERT_INTO_TEACHER_TABLE,[msisdn, sales_manger],  (err, result) => {
+              if (err){
+                console.log(err + "Error creating teacher in teacher table");
+                return;
+              }
+
+              console.log("teacher successfully insertednin teacher table")
+              return;
+            })
             //Send message to teacher refactor it, I called it VerifyToken but it should be renamed
             const { success, message } = await VerifyToken(user_name, senderMessgae)
 

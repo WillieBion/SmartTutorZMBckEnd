@@ -1,7 +1,17 @@
+/* user */
 const CREATE_USER_QUERY = "INSERT INTO user_details (msisdn, user_name, password, user_role, user_status, device_id) VALUES (?, ? ,?, ?, ?, ?)";
 const GET_USER_DETAILS = "SELECT * FROM user_details WHERE user_name = ?";
 const LOGIN_QRY = "SELECT * FROM user_details WHERE msisdn = ?;";
 const DELETE_USER_DETAILS = "DELETE FROM user_details WHERE user_name = ?"
+
+/* Teacher */
+const INSERT_INTO_TEACHER_TABLE = "INSERT INTO teachers (teacher_msisdn, sales_manager) VALUES (?, ?)";
+const GET_TEACHER_REFERRAL_CODE = "SELECT code FROM referral_codes WHERE userID = ?";
+
+/* Sales Manager */
+const INSERT_INTO_SALES_MANAGER_TABLE = "INSERT INTO sales_managers (msisdn) VALUES (?)"
+const GET_SALES_MANAGER_ID = "SELECT id FROM sales_managers WHERE msisdn = ?";
+
 /* User status */
 const GET_UNSUBSCRIBED_USERS = "SELECT * from user_details WHERE user_status = ?"
 // const GET_USER_SUBSCRIPTION_STATUS = "SELECT * ";
@@ -393,6 +403,10 @@ export const db_query = {
   GET_COUNT_REFERRALS_USED_UNDER_SALES_MANAGER,
   GET_STUDENTS_ACTIVELY_USING_REFERRAL_CODE,
   GET_COUNT_OF_STUDENTS_SUBSCRIPTION_TEACHER_REFERRAL,
+  GET_TEACHER_REFERRAL_CODE,
+  GET_SALES_MANAGER_ID,
+  INSERT_INTO_SALES_MANAGER_TABLE,
+  INSERT_INTO_TEACHER_TABLE,
   deleteQuery,
   updateQuery
 };
