@@ -398,6 +398,17 @@ router.post('/dashboard/login', (req, res) => {
                   res.status(resp.statusCode).json(resp);
                 }
               })
+            }else {
+              const respo = {
+                statusCode: successCodes.SERVER_SUCCESS,
+                message: {
+                  description: successMessages.LOGIN_SUCCESS,
+                  user_details: user
+                },
+                jwtToken: userAccToken
+              };
+              const resp = responseHandler(respo);
+              res.status(resp.statusCode).json(resp);
             }
 
         
