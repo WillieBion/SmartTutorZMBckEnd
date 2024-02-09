@@ -20,88 +20,114 @@ router.post("/subscribe", (req, res) => {
   /* Use MSISDN as identifier */
   const transID = generateTransId();
 
-  try {
-    database.query(
-      db_query.ADD_SUBSCRIPTION_QRY,
-      [user_name, transID, referral_code, subscription],
-      async (error, result) => {
+  database.query(db_query.GET_SUBSCRIPTION_DETAILS_VALID, [user_name], (err, result) => {
+    if (err) {
+      console.log("Get Valid subs" + err.code) 
 
-        if (error && error.code === "ER_NO_REFERENCED_ROW_2"){
-          const dbResp = {
-            statusCode: errorCodes.NOT_FOUND_RESOURCE,
-            message: errorMessages.REFERRAL_CODE_DOESNT_EXIST,
-          };
-          const resp = responseHandler(dbResp);
-          res.status(resp.statusCode).json(resp);
-          return;
-        }
-        if (error) {
-          const dbResp = {
-            statusCode: errorCodes.INTERNAL_SERVER_ERROR,
-            message: error.code,
-          };
-          const resp = responseHandler(dbResp);
-          res.status(resp.statusCode).json(resp);
-          return;
-        } else {
-          // const dbResp = {
-          //   statusCode: successCodes.SERVER_SUCCESS,
-          //   message: { description: successMessages.ADD_PAYMENT_SUCCESS },
-          // };
-          // const resp = responseHandler(dbResp);
-          // res.status(successCodes.SERVER_SUCCESS).json(resp);
+      const dbResp = {
+        statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+        message: errorMessages.INTERNAL_SERVER_ERROR,
+      };
+      const resp = responseHandler(dbResp);
+      res.status(resp.statusCode).json(resp);
+    } else if (result.length > 1) {
+      const dbResp = {
+        statusCode: errorCodes.RESOURCE_ALREADY_EXISTS,
+        message: errorMessages.SUBSCRIPTION_ALREADY_EXISTS,
+      };
+      const resp = responseHandler(dbResp);
+      res.status(resp.statusCode).json(resp);
+    } else {
 
-          /* Axios Headers */
-          const headers = {
-            "X-Authorization": properties.PAYMENT_API,
-            "Content-Type": "application/json",
-          };
+      try {
+        database.query(
+          db_query.ADD_SUBSCRIPTION_QRY,
+          [user_name, transID, referral_code, subscription],
+          async (error, result) => {
 
-          /* dataToPost */
-          const dataToPost = {
-            payer_number: msisdn,
-            external_reference: transID,
-            payment_narration: paymentMessages.NARRATION_MSG,
-            currency: "ZMW",
-            amount: amount,
-          };
+            if (error && error.code === "ER_NO_REFERENCED_ROW_2") {
+              const dbResp = {
+                statusCode: errorCodes.NOT_FOUND_RESOURCE,
+                message: errorMessages.REFERRAL_CODE_DOESNT_EXIST,
+              };
+              const resp = responseHandler(dbResp);
+              res.status(resp.statusCode).json(resp);
+              return;
+            }
+            if (error) {
+              console.log("From ADD Subscription")
 
-          /* Make primeNet post  */
-          const primeResponse = await axios.post(
-            `${BASE_URL}/api/v2/transaction/collect`,
-            dataToPost,
-            { headers }
-          );
-          if (primeResponse.status === 202) {
-            console.log("Prompt was successfully sent");
-            const dbResp = {
-              statusCode: successCodes.SERVER_SUCCESS,
-              message: { description: primeResponse.data.message },
-            };
+              const dbResp = {
+                statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+                message: error.code,
+              };
+              const resp = responseHandler(dbResp);
+              res.status(resp.statusCode).json(resp);
+              return;
+            } else {
+              // const dbResp = {
+              //   statusCode: successCodes.SERVER_SUCCESS,
+              //   message: { description: successMessages.ADD_PAYMENT_SUCCESS },
+              // };
+              // const resp = responseHandler(dbResp);
+              // res.status(successCodes.SERVER_SUCCESS).json(resp);
 
-            const resp = responseHandler(dbResp);
-            res.status(resp.statusCode).json(resp);
-          } else {
-            const dbResp = {
-              statusCode: errorCodes.INTERNAL_SERVER_ERROR,
-              message: { description: primeResponse.data.message },
-            };
+              /* Axios Headers */
+              const headers = {
+                "X-Authorization": properties.PAYMENT_API,
+                "Content-Type": "application/json",
+              };
 
-            const resp = responseHandler(dbResp);
-            res.status(resp.statusCode).json(resp);
+              /* dataToPost */
+              const dataToPost = {
+                payer_number: msisdn,
+                external_reference: transID,
+                payment_narration: paymentMessages.NARRATION_MSG,
+                currency: "ZMW",
+                amount: amount,
+              };
+
+              /* Make primeNet post  */
+              const primeResponse = await axios.post(
+                `${BASE_URL}/api/v2/transaction/collect`,
+                dataToPost,
+                { headers }
+              );
+              if (primeResponse.status === 202) {
+                console.log("Prompt was successfully sent");
+                const dbResp = {
+                  statusCode: successCodes.SERVER_SUCCESS,
+                  message: { description: primeResponse.data.message },
+                };
+
+                const resp = responseHandler(dbResp);
+                res.status(resp.statusCode).json(resp);
+              } else {
+                const dbResp = {
+                  statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+                  message: { description: primeResponse.data.message },
+                };
+
+                const resp = responseHandler(dbResp);
+                res.status(resp.statusCode).json(resp);
+              }
+            }
           }
-        }
-      }
-    );
-  } catch (error) {
-    const dbResp = {
-      statusCode: errorCodes.INTERNAL_SERVER_ERROR,
-      message: errorMessages.INTERNAL_SERVER_ERROR,
-    };
-    const resp = responseHandler(dbResp);
+        );
+      } catch (error) {
+        console.log("try catch")
 
-    res.status(500).json(resp);
-  }
+        const dbResp = {
+          statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+          message: errorMessages.INTERNAL_SERVER_ERROR,
+        };
+        const resp = responseHandler(dbResp);
+
+        res.status(500).json(resp);
+      }
+    }
+  })
+
 });
 
 /* Get Subscription details */

@@ -49,7 +49,7 @@ export const errorMessages = {
   USER_AUTHENTICATION_STATUS_FAILED: "User not authenticated",
   USER_ALREADY_EXISTS: "User already exists",
   REFERRAL_CODE_DOESNT_EXIST: "Referral ID does not exist.",
-
+  SUBSCRIPTION_ALREADY_EXISTS: "You already have a valid subscription"
 };
 
 //Resuable Success Messgae
