@@ -158,7 +158,7 @@ export const teacherDefaultPass = (referral_code: string) => {
     otp += charset.charAt(randomIndex);
   }
   // const message = `Your OTP is ${otp}`;
-  const message = `Your default login password is ${otp} and your referral ID is ${referral_code}. https://etutor.co.zm`
+  const message = `Your default login password is ${otp}, and your referral ID is ${referral_code}. Your username is the phone number you used to register. https://etutor.co.zm.`
 
   //   // return otp;
   const urlEncodedMessage = encodeURIComponent(message);
