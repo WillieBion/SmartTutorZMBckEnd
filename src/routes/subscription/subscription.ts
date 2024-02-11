@@ -22,7 +22,7 @@ router.post("/subscribe", (req, res) => {
 
   database.query(db_query.GET_SUBSCRIPTION_DETAILS_VALID, [user_name], (err, result) => {
     if (err) {
-      console.log("Get Valid subs" + err.code) 
+      console.log("Get Valid subs" + err.code)
 
       const dbResp = {
         statusCode: errorCodes.INTERNAL_SERVER_ERROR,
@@ -213,7 +213,46 @@ router.post("/smartTutor/callback", (req, res) => {
             };
             const resp = responseHandler(dbResp);
             res.status(resp.statusCode).json(resp);
+          } else if (!result || result.length === 0) {
+            const dbResp = {
+              statusCode: errorCodes.NOT_FOUND_RESOURCE,
+              message: "User ID not found for the provided transaction ID.",
+            };
+            const resp = responseHandler(dbResp);
+            res.status(resp.statusCode).json(resp);
           } else {
+            //We want to update the is_valid value which we will set to 0 as default until callback is sent
+
+            database.query(db_query.UPDATE_IS_VALID_SUBSCRIPTION_STATUS_QRY, [order_id], (err, updateValidity) => {
+              if (err) {
+                console.log(err);
+                return;
+              } else {
+                console.log(updateValidity + "Done");
+                database.query(
+                  db_query.UPDATE_USER_STATUS_QRY,
+                  [2, result[0].user_id],
+                  (err, result) => {
+                    if (err) {
+                      const dbResp = {
+                        statusCode: errorCodes.INTERNAL_SERVER_ERROR,
+                        message: err.code,
+                      };
+                      const resp = responseHandler(dbResp);
+                      res.status(resp.statusCode).json(resp);
+                      return;
+                    } else {
+                      const dbResp = {
+                        statusCode: successCodes.SERVER_SUCCESS,
+                        message: successMessages.UPDATED_SUBSCRIPTION_SUCCESS,
+                      };
+                      const resp = responseHandler(dbResp);
+                      res.status(resp.statusCode).json(resp);
+                    }
+                  }
+                );
+              }
+            })
             // const dbResp = {
             //   statusCode: successCodes.SERVER_SUCCESS,
             //   message: successMessages.UPDATED_SUBSCRIPTION_SUCCESS,
@@ -221,28 +260,6 @@ router.post("/smartTutor/callback", (req, res) => {
             // const resp = responseHandler(dbResp);
             // res.status(resp.statusCode).json(resp);
             // console.log("I am result: " + result[0]);
-            database.query(
-              db_query.UPDATE_USER_STATUS_QRY,
-              [2, result[0].user_id],
-              (err, result) => {
-                if (err) {
-                  const dbResp = {
-                    statusCode: errorCodes.INTERNAL_SERVER_ERROR,
-                    message: err.code,
-                  };
-                  const resp = responseHandler(dbResp);
-                  res.status(resp.statusCode).json(resp);
-                  return;
-                } else {
-                  const dbResp = {
-                    statusCode: successCodes.SERVER_SUCCESS,
-                    message: successMessages.UPDATED_SUBSCRIPTION_SUCCESS,
-                  };
-                  const resp = responseHandler(dbResp);
-                  res.status(resp.statusCode).json(resp);
-                }
-              }
-            );
           }
         }
       );

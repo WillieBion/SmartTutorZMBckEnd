@@ -58,6 +58,7 @@ const GET_SUBSCRIPTION_DETAILS_BY_QRY =
   "SELECT * FROM subscription_details WHERE id = ?";
 const GET_SUBSCRIPTION_STATUS_QRY = "SELECT * FROM subscriptions WHERE user_id = ?";
 const GET_SUBSCRIPTION_DETAILS_VALID = "SELECT * FROM subscriptions WHERE user_id = ? AND is_valid = 1";
+const UPDATE_IS_VALID_SUBSCRIPTION_STATUS_QRY = "UPDATE subscriptions SET is_valid = 1 WHERE trans_id = ?"
 
 /* Update Password */
 const UPDATE_PASSWORD_QRY =
@@ -406,6 +407,7 @@ export const db_query = {
   CREATE_OTP_QRY,
   GET_OTP_QRY,
   GET_SUBSCRIPTION_STATUS_QRY,
+  UPDATE_IS_VALID_SUBSCRIPTION_STATUS_QRY,
   CREATE_USER_QUERY,
   CREATE_REFERRAL_CODE,
   ADMIN_GET_USER_DATA,
